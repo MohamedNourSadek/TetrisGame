@@ -7,6 +7,7 @@
 #include "TetrisPiece.h"
 #include "TetrisController.generated.h"
 
+
 UCLASS()
 class TETRIS_API ATetrisController : public APawn
 {
@@ -27,10 +28,13 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+private:
 	UPROPERTY(EditAnywhere)
 		AActor* spawnPoint;
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AActor> pieceBP;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
+		TArray<ATetrisPiece*> spawnedPieces;
+
 };

@@ -15,19 +15,11 @@ ATetrisPiece::ATetrisPiece()
 void ATetrisPiece::BeginPlay()
 {
 	Super::BeginPlay();
-
-	currentPosition = GetActorLocation().X;
 }
 
 // Called every frame
 void ATetrisPiece::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	currentPosition += DeltaTime * speed;
-
-	int currentScale = ((int)(currentPosition / incrementValue))* incrementValue;
-
-	SetActorLocation(FVector(currentScale, GetActorLocation().Y, GetActorLocation().Z));
 }
 
