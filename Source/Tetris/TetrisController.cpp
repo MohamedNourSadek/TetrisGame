@@ -32,9 +32,7 @@ void ATetrisController::Tick(float DeltaTime)
 	if (descretTime != lastInitializedTime)
 	{
 		lastInitializedTime = descretTime;
-
 		GetWorld()->SpawnActor(pieceBP,&spawnPoint->GetTransform());
-		//spawn;
 	}
 }
 
