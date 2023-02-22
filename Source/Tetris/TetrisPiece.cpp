@@ -25,16 +25,19 @@ void ATetrisPiece::Tick(float DeltaTime)
 
 void ATetrisPiece::MovePiece(int newX, int newY)
 {
-	x = newX;
-	y = newY; 
+	if (newX < 10 && newX > 1)
+	{
+		x = newX;
+		y = newY; 
 
-	FVector currentWorldLocation = GetActorLocation();
-	FVector newLocation =
-		FVector(
-			100 * newX,
-			100 * newY,
-			currentWorldLocation.Z
-		);
+		FVector currentWorldLocation = GetActorLocation();
+		FVector newLocation =
+			FVector(
+				100 * newX,
+				100 * newY,
+				currentWorldLocation.Z
+			);
 
-	SetActorLocation(newLocation);
+		SetActorLocation(newLocation);
+	}
 }

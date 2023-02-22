@@ -52,6 +52,9 @@ void ATetrisController::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAction("Left", IE_Pressed, this, &ATetrisController::LeftRecieved);
+	PlayerInputComponent->BindAction("Right", IE_Pressed, this, &ATetrisController::RightRecieved);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ATetrisController::JumpRecieved);
 }
 #pragma endregion
 
@@ -76,7 +79,7 @@ int ATetrisController::LastCollision()
 		return 1;
 
 	int startPoint = currentPiece->x - 1;
-	int endPoint = currentPiece->x - 1;
+	int endPoint = currentPiece->x + 1;
 
 	for (int y = 20; y >= 1; y--)
 	{
@@ -112,5 +115,17 @@ void ATetrisController::SpawnNewPiece()
 {
 	ATetrisPiece* piece = Cast<ATetrisPiece>(GetWorld()->SpawnActor(pieceBP, &spawnPoint->GetTransform()));
 	InitializePiece(*piece);
+}
+void ATetrisController::JumpRecieved()
+{
+	UE_LOG(LogTemp, Display, TEXT("Jump"));
+}
+void ATetrisController::LeftRecieved()
+{
+	currentPiece->MovePiece(currentPiece->x + 1, currentPiece->y);
+}
+void ATetrisController::RightRecieved()
+{
+	currentPiece->MovePiece(currentPiece->x - 1, currentPiece->y);
 }
 #pragma endregion
