@@ -14,10 +14,20 @@ class TETRIS_API ATetrisPiece : public AActor
 	
 public:	
 	ATetrisPiece();
+	void MovePiece(int newX, int newY);
 
 protected:
 	virtual void BeginPlay() override;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
+
+
+public:
+	UPROPERTY(VisibleAnywhere)
+	int width = 3;
+	UPROPERTY(VisibleAnywhere)
+	int x = 5;
+	UPROPERTY(VisibleAnywhere)
+	int y = 20;
 };

@@ -28,7 +28,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+//private variables
 private:
+	UPROPERTY(EditAnywhere)
+		float tickEvery = 1;
+
 	UPROPERTY(EditAnywhere)
 		AActor* spawnPoint;
 	UPROPERTY(EditAnywhere)
@@ -37,4 +41,16 @@ private:
 	UPROPERTY(EditAnywhere)
 		TArray<ATetrisPiece*> spawnedPieces;
 
+	UPROPERTY(EditAnywhere)
+		ATetrisPiece* currentPiece;
+
+
+	int lastSecondTicked = 0;
+	float timeSinceStartUp = 0;
+
+//private functions
+private:
+	int LastCollision();
+	void InitializePiece(ATetrisPiece& piece);
+	void SpawnNewPiece();
 };
