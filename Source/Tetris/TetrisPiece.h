@@ -24,7 +24,7 @@ public:
 
 
 public:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 	int width = 3;
 	UPROPERTY(VisibleAnywhere)
 	int x = 5;

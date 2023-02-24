@@ -3,7 +3,6 @@
 
 #include "TetrisPiece.h"
 
-// Sets default values
 ATetrisPiece::ATetrisPiece()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -11,13 +10,11 @@ ATetrisPiece::ATetrisPiece()
 
 }
 
-// Called when the game starts or when spawned
 void ATetrisPiece::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
-// Called every frame
 void ATetrisPiece::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -25,7 +22,7 @@ void ATetrisPiece::Tick(float DeltaTime)
 
 void ATetrisPiece::MovePiece(int newX, int newY)
 {
-	if (newX < 10 && newX > 1)
+	if ((newX + width <= 11) && newX >= 1)
 	{
 		x = newX;
 		y = newY; 

@@ -53,6 +53,7 @@ private:
 	int LastCollision();
 	void InitializePiece(ATetrisPiece& piece);
 	void SpawnNewPiece();
+	void ReorganizePieces();
 	void RightRecieved();
 	void LeftRecieved();
 	void JumpRecieved();

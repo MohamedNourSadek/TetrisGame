@@ -2,6 +2,7 @@
 
 #include "TetrisController.h"
 
+#include "EntitySystem/MovieSceneEntitySystemRunner.h"
 
 struct Vector2
 {
@@ -65,21 +66,23 @@ int ATetrisController::LastCollision()
 		return 1;
 
 	TArray<Vector2> occupied;
+	
 	for (ATetrisPiece* piece : spawnedPieces)
 	{
 		if (piece != currentPiece)
 		{
-			occupied.Add(Vector2(piece->x, piece->y));
-			occupied.Add(Vector2(piece->x + 1, piece->y));
-			occupied.Add(Vector2(piece->x - 1, piece->y));
+			for(int i =0; i < piece->width; i++)
+			{
+				occupied.Add(Vector2(piece->x + 1, piece->y));
+			}
 		}
 	}
 
 	if (occupied.Num() == 0)
 		return 1;
 
-	int startPoint = currentPiece->x - 1;
-	int endPoint = currentPiece->x + 1;
+	int startPoint = currentPiece->x;
+	int endPoint = currentPiece->x + currentPiece->width;
 
 	for (int y = 20; y >= 1; y--)
 	{
@@ -107,18 +110,43 @@ void ATetrisController::InitializePiece(ATetrisPiece& piece)
 {
 	piece.x = spawnPoint->GetActorLocation().X / 100;
 	piece.y = spawnPoint->GetActorLocation().Y / 100;
-
+	
 	spawnedPieces.Add(&piece);
 	currentPiece = &piece;
 }
 void ATetrisController::SpawnNewPiece()
 {
+	ReorganizePieces();
 	ATetrisPiece* piece = Cast<ATetrisPiece>(GetWorld()->SpawnActor(pieceBP, &spawnPoint->GetTransform()));
 	InitializePiece(*piece);
 }
+void ATetrisController::ReorganizePieces()
+{
+	TArray<int> completeRow;
+	
+	for(int i = 1; i <= 20; i++)
+	{
+		int totalSum = 0;
+		
+		for(ATetrisPiece* piece : spawnedPieces)
+		{
+			if(piece->y == i)
+				totalSum += piece->width;				
+		}
+
+		if(totalSum == 10)
+		{
+			completeRow.Add(i);
+			UE_LOG(LogTemp, Display, TEXT("Complete at : %d") , i);
+		}
+	}
+
+}
 void ATetrisController::JumpRecieved()
 {
-	UE_LOG(LogTemp, Display, TEXT("Jump"));
+	int collisionLimit = LastCollision();
+	currentPiece->MovePiece(currentPiece->x, collisionLimit);
+	SpawnNewPiece();
 }
 void ATetrisController::LeftRecieved()
 {
