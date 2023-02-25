@@ -13,48 +13,40 @@ class TETRIS_API ATetrisController : public APawn
 {
 	GENERATED_BODY()
 
+#pragma region Unreal Functions
 public:
-	// Sets default values for this pawn's properties
 	ATetrisController();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+protected:
+	virtual void BeginPlay() override;
+#pragma endregion 
 
-//private variables
+#pragma region Private Variables
 private:
-	UPROPERTY(EditAnywhere)
-		float tickEvery = 1;
-
-	UPROPERTY(EditAnywhere)
-		AActor* spawnPoint;
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<AActor> pieceBP;
-
-	UPROPERTY(EditAnywhere)
-		TArray<ATetrisPiece*> spawnedPieces;
-
-	UPROPERTY(EditAnywhere)
-		ATetrisPiece* currentPiece;
-
-
+	UPROPERTY(EditAnywhere) bool LogActions = false;
+	UPROPERTY(EditAnywhere) float tickEvery = 1;
+	UPROPERTY(EditAnywhere) AActor* spawnPoint;
+	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AActor>> pieces;
+	UPROPERTY(EditAnywhere)	TArray<ATetrisPiece*> spawnedPieces;
+	UPROPERTY(EditAnywhere) ATetrisPiece* currentPiece;
+	bool gameIsOn = false;
+	bool movingAPiece = false;
 	int lastSecondTicked = 0;
 	float timeSinceStartUp = 0;
+#pragma endregion
 
-//private functions
+#pragma region Private Functions
 private:
 	int LastCollision();
 	void InitializePiece(ATetrisPiece& piece);
 	void SpawnNewPiece();
 	void ReorganizePieces();
+	void MovePiece(ATetrisPiece* piece,int newX,int newY);
 	void RightRecieved();
 	void LeftRecieved();
 	void JumpRecieved();
+	TArray<FIntVector2>* FindOccupied(const ATetrisPiece* myPiece);
+#pragma endregion
+
 };

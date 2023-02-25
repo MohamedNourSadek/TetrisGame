@@ -1,20 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TetrisController.h"
-
 #include "EntitySystem/MovieSceneEntitySystemRunner.h"
 
-struct Vector2
-{
-	int x = 1;
-	int y = 1;
-
-	Vector2(int X, int Y)
-	{
-		x = X;
-		y = Y;
-	}
-};
 
 #pragma region Unreal Functions
 ATetrisController::ATetrisController()
@@ -25,29 +13,34 @@ void ATetrisController::BeginPlay()
 {
 	Super::BeginPlay();
 	SpawnNewPiece();
+	gameIsOn =true;
 }
 void ATetrisController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	timeSinceStartUp += DeltaTime;
-	
-	int timeDescrete = (int)(timeSinceStartUp/ tickEvery);
-
-	if (timeDescrete != lastSecondTicked)
+	if(gameIsOn)
 	{
-		lastSecondTicked = timeDescrete;
-
-		int collisionLimit = LastCollision();
-
-		if (collisionLimit > 20)
-			UE_LOG(LogTemp, Display, TEXT("Game is Over"))
-		else if (currentPiece->y > collisionLimit)
-			currentPiece->MovePiece(currentPiece->x, currentPiece->y - 1);
-		else
-			SpawnNewPiece();
-	}
+		timeSinceStartUp += DeltaTime;
 	
+		int timeDescrete = (int)(timeSinceStartUp/ tickEvery);
+	
+		if (timeDescrete != lastSecondTicked && !movingAPiece)
+		{
+			lastSecondTicked = timeDescrete;
+			int collisionLimit = LastCollision();
+		
+			if (collisionLimit > 20)
+			{
+				UE_LOG(LogTemp, Display, TEXT("Game is Over"))
+				gameIsOn = false;
+			}
+			else if (currentPiece->y > collisionLimit)
+				MovePiece(currentPiece, currentPiece->x, currentPiece->y - 1);
+			else
+				SpawnNewPiece();
+		}
+	}
 }
 void ATetrisController::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -65,45 +58,32 @@ int ATetrisController::LastCollision()
 	if (spawnedPieces.Num() == 1)
 		return 1;
 
-	TArray<Vector2> occupied;
-	
-	for (ATetrisPiece* piece : spawnedPieces)
+	TArray<FIntVector2>* occupied = FindOccupied(currentPiece);
+	if (occupied->Num() == 0)
 	{
-		if (piece != currentPiece)
-		{
-			for(int i =0; i < piece->width; i++)
-			{
-				occupied.Add(Vector2(piece->x + 1, piece->y));
-			}
-		}
+		delete occupied;
+		return 1;
 	}
 
-	if (occupied.Num() == 0)
-		return 1;
-
-	int startPoint = currentPiece->x;
-	int endPoint = currentPiece->x + currentPiece->width;
-
-	for (int y = 20; y >= 1; y--)
+	for(int y = currentPiece->y - 1; y >= 1; y--)
 	{
-		bool isHorizontalLineOccuipied = false;
-
-		for (int x = startPoint; x <= endPoint; x++)
+		for(FIntVector2 bodyPiece : currentPiece->geometry)
 		{
-			for (Vector2 point : occupied)
+			int posX = currentPiece->x + bodyPiece.X;
+			int posY = y + bodyPiece.Y;
+
+			for (FIntVector2 point : *occupied)
 			{
-				if ((point.x == x) && (point.y == y))
+				if(point.X == posX && point.Y == posY)
 				{
-					isHorizontalLineOccuipied = true;
-					break;
+					delete occupied;
+					return posY + 1;
 				}
 			}
-		}
-
-		if(isHorizontalLineOccuipied)
-			return y + 1;
+		}		
 	}
-
+	
+	delete occupied;
 	return 1;
 }
 void ATetrisController::InitializePiece(ATetrisPiece& piece)
@@ -117,43 +97,174 @@ void ATetrisController::InitializePiece(ATetrisPiece& piece)
 void ATetrisController::SpawnNewPiece()
 {
 	ReorganizePieces();
-	ATetrisPiece* piece = Cast<ATetrisPiece>(GetWorld()->SpawnActor(pieceBP, &spawnPoint->GetTransform()));
+	int randomPiece = FMath::RandRange(0,pieces.Num() - 1);
+	ATetrisPiece* piece = Cast<ATetrisPiece>(GetWorld()->SpawnActor(pieces[randomPiece], &spawnPoint->GetTransform()));
 	InitializePiece(*piece);
 }
 void ATetrisController::ReorganizePieces()
 {
-	TArray<int> completeRow;
-	
+	//finding complete rows
+	TArray<int> compelteRows;
 	for(int i = 1; i <= 20; i++)
 	{
 		int totalSum = 0;
 		
 		for(ATetrisPiece* piece : spawnedPieces)
 		{
-			if(piece->y == i)
-				totalSum += piece->width;				
+			if(piece != nullptr)
+			{
+				if(piece->y == i)
+					totalSum += piece->width;
+			}
 		}
 
 		if(totalSum == 10)
+			compelteRows.Add(i);
+	}
+
+	//destroying and moving pieces
+	for(int completeRow : compelteRows)
+	{
+		TArray<ATetrisPiece*> piecesToRemove;
+		
+		for(ATetrisPiece* piece : spawnedPieces)
 		{
-			completeRow.Add(i);
-			UE_LOG(LogTemp, Display, TEXT("Complete at : %d") , i);
+			if(piece->y == completeRow)
+				piecesToRemove.Add(piece);
+
+		}
+
+		for(ATetrisPiece* piece : piecesToRemove)
+		{
+			spawnedPieces.Remove(piece);
+			piece->Destroy();
+		}
+
+		for(ATetrisPiece* piece : spawnedPieces)
+		{
+			if(piece->y > completeRow)
+				MovePiece(piece, piece->x, piece->y - 1);
+		}
+		
+	}
+
+	
+}
+void ATetrisController::MovePiece(ATetrisPiece* piece,int newX,int newY)
+{
+	if(movingAPiece != true)
+	{
+		movingAPiece = true;
+
+		if(LogActions)
+			UE_LOG(LogTemp, Warning, TEXT("Attempting to move %s -- to y = %d"),
+				*currentPiece->GetActorNameOrLabel(),
+				newY);
+
+		bool reachedLeft = false;
+		for(FIntVector2 bodyPiece: piece->geometry)
+		{
+			int newPos = newX + bodyPiece.X;
+
+			if(newPos > 10)
+			{
+				reachedLeft = true;
+				break;
+			}
+		
+		}
+		bool reachedRight = (newX < 1);
+		bool newPosOccupied = false;
+
+		TArray<FIntVector2>* occupiedPos = FindOccupied(piece);
+
+		TArray<FIntVector2> conflicted;
+		
+		for(FIntVector2 bodyPiece: piece->geometry)
+			for(FIntVector2 v : *occupiedPos)
+				if(v.X == newX + bodyPiece.X && v.Y == newY + bodyPiece.Y)
+				{
+					conflicted.Add(v);					
+					newPosOccupied = true;
+				}
+
+		delete occupiedPos;
+	
+		if (!reachedLeft && !reachedRight && !newPosOccupied)
+		{
+			piece->MovePiece(newX,newY);
+
+			if(LogActions)
+				UE_LOG(LogTemp, Warning, TEXT("Successfully %s -- to y = %d"),
+					*currentPiece->GetActorNameOrLabel(),
+					newY);
+		}
+		else
+		{
+			if(LogActions)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Failed to move %s -- to y = %d because the following points:"),
+					   *currentPiece->GetActorNameOrLabel(),
+					   newY);
+				for(auto a : conflicted)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("(%d, %d)"), a.X,a.Y);
+				}
+			}
+		}
+
+		movingAPiece = false;
+	}
+}
+TArray<FIntVector2>* ATetrisController::FindOccupied(const ATetrisPiece* myPiece)
+{
+	TArray<FIntVector2>* occupied = new TArray<FIntVector2>();
+	
+	for (ATetrisPiece* piece : spawnedPieces)
+	{
+		if (piece != myPiece)
+		{
+			for(FIntVector2 bodyPiece : piece->geometry)
+			{
+				occupied->Add(FIntVector2(piece->x + bodyPiece.X, piece->y + bodyPiece.Y));
+			}
 		}
 	}
 
+	return occupied;
 }
+#pragma endregion
+
+#pragma region Input CallBacks
 void ATetrisController::JumpRecieved()
 {
-	int collisionLimit = LastCollision();
-	currentPiece->MovePiece(currentPiece->x, collisionLimit);
-	SpawnNewPiece();
+	if(gameIsOn)
+	{
+		if(LogActions)
+			UE_LOG(LogTemp, Warning, TEXT("Jump Pressed"));
+		int collisionLimit = LastCollision();
+		MovePiece(currentPiece, currentPiece->x, collisionLimit);
+		SpawnNewPiece();
+	}
 }
 void ATetrisController::LeftRecieved()
 {
-	currentPiece->MovePiece(currentPiece->x + 1, currentPiece->y);
+	if(gameIsOn)
+	{
+		if(LogActions)
+			UE_LOG(LogTemp, Warning, TEXT("Left Pressed"));
+	
+		MovePiece(currentPiece, currentPiece->x + 1, currentPiece->y);
+	}
 }
 void ATetrisController::RightRecieved()
 {
-	currentPiece->MovePiece(currentPiece->x - 1, currentPiece->y);
+	if(gameIsOn)
+	{
+		if(LogActions)
+			UE_LOG(LogTemp, Warning, TEXT("Right Pressed"));
+	
+		MovePiece(currentPiece, currentPiece->x - 1, currentPiece->y);
+	}
 }
 #pragma endregion
