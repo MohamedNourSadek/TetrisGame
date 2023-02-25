@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TetrisController.h"
-#include "EntitySystem/MovieSceneEntitySystemRunner.h"
 
 
 #pragma region Unreal Functions
@@ -38,7 +37,10 @@ void ATetrisController::Tick(float DeltaTime)
 			else if (currentPiece->y > collisionLimit)
 				MovePiece(currentPiece, currentPiece->x, currentPiece->y - 1);
 			else
+			{
+				SplitPiece(currentPiece);
 				SpawnNewPiece();
+			}
 		}
 	}
 }
@@ -114,7 +116,7 @@ void ATetrisController::ReorganizePieces()
 			if(piece != nullptr)
 			{
 				if(piece->y == i)
-					totalSum += piece->width;
+					totalSum += 1;
 			}
 		}
 
@@ -216,6 +218,54 @@ void ATetrisController::MovePiece(ATetrisPiece* piece,int newX,int newY)
 		movingAPiece = false;
 	}
 }
+void ATetrisController::SplitPiece(ATetrisPiece* piece)
+{
+	spawnedPieces.Remove(piece);
+	
+	TArray<UActorComponent*> children;
+	piece->GetComponents(children);
+
+	UMaterialInterface* material = nullptr;
+	
+	for(auto child : children)
+	{
+		if(child->GetName() == "Cube")
+		{
+			UStaticMeshComponent* body = piece->FindComponentByClass<UStaticMeshComponent>();
+			material =  body->GetMaterial(0);
+		}
+	}
+	
+	for(FIntVector2 bodyPiece: piece->geometry)
+	{
+		ATetrisPiece* newPiece = Cast<ATetrisPiece>(GetWorld()->SpawnActor(pieces[0], &spawnPoint->GetTransform()));
+
+		MovePiece(
+			newPiece,
+			piece->x + bodyPiece.X,
+			piece->y + bodyPiece.Y);
+
+		spawnedPieces.Add(newPiece);
+
+		TArray<UActorComponent*> newChildren;
+		newPiece->GetComponents(newChildren);
+
+		for(auto child : newChildren)
+		{
+			if(child->GetName() == "Cube")
+			{
+				UStaticMeshComponent* body = newPiece->FindComponentByClass<UStaticMeshComponent>();
+
+				if(material != nullptr)
+					body->SetMaterial(0,material);
+			}
+		}
+
+		
+	}
+
+	piece->Destroy();
+}
 TArray<FIntVector2>* ATetrisController::FindOccupied(const ATetrisPiece* myPiece)
 {
 	TArray<FIntVector2>* occupied = new TArray<FIntVector2>();
@@ -244,6 +294,7 @@ void ATetrisController::JumpRecieved()
 			UE_LOG(LogTemp, Warning, TEXT("Jump Pressed"));
 		int collisionLimit = LastCollision();
 		MovePiece(currentPiece, currentPiece->x, collisionLimit);
+		SplitPiece(currentPiece);
 		SpawnNewPiece();
 	}
 }

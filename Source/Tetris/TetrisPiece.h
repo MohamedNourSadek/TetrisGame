@@ -25,7 +25,6 @@ public:
 	
 #pragma region Public Variables
 public:
-	UPROPERTY(EditAnywhere) int width;
 	UPROPERTY(EditAnywhere) TArray<FIntVector2> geometry;
 	UPROPERTY(VisibleAnywhere) int x = 5;
 	UPROPERTY(VisibleAnywhere) int y = 20;

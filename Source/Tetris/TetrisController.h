@@ -46,6 +46,7 @@ private:
 	void RightRecieved();
 	void LeftRecieved();
 	void JumpRecieved();
+	void SplitPiece(ATetrisPiece* piece);
 	TArray<FIntVector2>* FindOccupied(const ATetrisPiece* myPiece);
 #pragma endregion
 
