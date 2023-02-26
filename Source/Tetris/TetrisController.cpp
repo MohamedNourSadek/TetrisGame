@@ -27,18 +27,22 @@ void ATetrisController::Tick(float DeltaTime)
 		if (timeDescrete != lastSecondTicked && !movingAPiece)
 		{
 			lastSecondTicked = timeDescrete;
-			int collisionLimit = LastCollision();
-		
+			
+			int collisionLimit = LastCollision(currentPiece[0]);;
+			UE_LOG(LogTemp, Display, TEXT("%d"), collisionLimit);
+			
 			if (collisionLimit > 20)
 			{
 				UE_LOG(LogTemp, Display, TEXT("Game is Over"))
 				gameIsOn = false;
 			}
-			else if (currentPiece->y > collisionLimit)
-				MovePiece(currentPiece, currentPiece->x, currentPiece->y - 1);
+			else if ((currentPiece)[0]->y > collisionLimit)
+			{
+				for(ATetrisPiece* piece : currentPiece)
+					MovePiece(piece, piece->x, piece->y - 1);
+			}
 			else
 			{
-				SplitPiece(currentPiece);
 				SpawnNewPiece();
 			}
 		}
@@ -55,23 +59,24 @@ void ATetrisController::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 #pragma endregion
 
 #pragma region Gameplay Functions
-int ATetrisController::LastCollision()
+int ATetrisController::LastCollision(ATetrisPiece* piece)
 {
 	if (spawnedPieces.Num() == 1)
 		return 1;
 
-	TArray<FIntVector2>* occupied = FindOccupied(currentPiece);
+	TArray<FIntVector2>* occupied = FindOccupied(piece);
+	
 	if (occupied->Num() == 0)
 	{
 		delete occupied;
 		return 1;
 	}
 
-	for(int y = currentPiece->y - 1; y >= 1; y--)
+	for(int y = piece->y - 1; y >= 1; y--)
 	{
-		for(FIntVector2 bodyPiece : currentPiece->geometry)
+		for(FIntVector2 bodyPiece : piece->geometry)
 		{
-			int posX = currentPiece->x + bodyPiece.X;
+			int posX = piece->x + bodyPiece.X;
 			int posY = y + bodyPiece.Y;
 
 			for (FIntVector2 point : *occupied)
@@ -94,7 +99,7 @@ void ATetrisController::InitializePiece(ATetrisPiece& piece)
 	piece.y = spawnPoint->GetActorLocation().Y / 100;
 	
 	spawnedPieces.Add(&piece);
-	currentPiece = &piece;
+	currentPiece = *SplitPiece(&piece);
 }
 void ATetrisController::SpawnNewPiece()
 {
@@ -158,11 +163,6 @@ void ATetrisController::MovePiece(ATetrisPiece* piece,int newX,int newY)
 	{
 		movingAPiece = true;
 
-		if(LogActions)
-			UE_LOG(LogTemp, Warning, TEXT("Attempting to move %s -- to y = %d"),
-				*currentPiece->GetActorNameOrLabel(),
-				newY);
-
 		bool reachedLeft = false;
 		for(FIntVector2 bodyPiece: piece->geometry)
 		{
@@ -195,31 +195,15 @@ void ATetrisController::MovePiece(ATetrisPiece* piece,int newX,int newY)
 		if (!reachedLeft && !reachedRight && !newPosOccupied)
 		{
 			piece->MovePiece(newX,newY);
-
-			if(LogActions)
-				UE_LOG(LogTemp, Warning, TEXT("Successfully %s -- to y = %d"),
-					*currentPiece->GetActorNameOrLabel(),
-					newY);
-		}
-		else
-		{
-			if(LogActions)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Failed to move %s -- to y = %d because the following points:"),
-					   *currentPiece->GetActorNameOrLabel(),
-					   newY);
-				for(auto a : conflicted)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("(%d, %d)"), a.X,a.Y);
-				}
-			}
 		}
 
 		movingAPiece = false;
 	}
 }
-void ATetrisController::SplitPiece(ATetrisPiece* piece)
+TArray<ATetrisPiece*>* ATetrisController::SplitPiece(ATetrisPiece* piece)
 {
+	TArray<ATetrisPiece*>* splitPiece = new TArray<ATetrisPiece*>();
+	
 	spawnedPieces.Remove(piece);
 	
 	TArray<UActorComponent*> children;
@@ -245,6 +229,8 @@ void ATetrisController::SplitPiece(ATetrisPiece* piece)
 			piece->x + bodyPiece.X,
 			piece->y + bodyPiece.Y);
 
+		splitPiece->Add(newPiece);
+		
 		spawnedPieces.Add(newPiece);
 
 		TArray<UActorComponent*> newChildren;
@@ -261,10 +247,10 @@ void ATetrisController::SplitPiece(ATetrisPiece* piece)
 			}
 		}
 
-		
 	}
 
 	piece->Destroy();
+	return splitPiece;
 }
 TArray<FIntVector2>* ATetrisController::FindOccupied(const ATetrisPiece* myPiece)
 {
@@ -272,7 +258,15 @@ TArray<FIntVector2>* ATetrisController::FindOccupied(const ATetrisPiece* myPiece
 	
 	for (ATetrisPiece* piece : spawnedPieces)
 	{
-		if (piece != myPiece)
+		bool oneOfMyPieces = false;
+
+		for(ATetrisPiece* aPiece : currentPiece)
+		{
+			if (piece == aPiece)
+				oneOfMyPieces = true;
+		}
+		
+		if (!oneOfMyPieces)
 		{
 			for(FIntVector2 bodyPiece : piece->geometry)
 			{
@@ -290,11 +284,19 @@ void ATetrisController::JumpRecieved()
 {
 	if(gameIsOn)
 	{
-		if(LogActions)
-			UE_LOG(LogTemp, Warning, TEXT("Jump Pressed"));
-		int collisionLimit = LastCollision();
-		MovePiece(currentPiece, currentPiece->x, collisionLimit);
-		SplitPiece(currentPiece);
+		int collisionLimit = 1;
+
+		for(ATetrisPiece* piece : currentPiece)
+		{
+			int pieceLimit = LastCollision(piece);
+
+			if(pieceLimit > collisionLimit)
+				collisionLimit = pieceLimit;
+		}
+			
+		for(ATetrisPiece* piece : currentPiece)
+			MovePiece(piece, piece->x, collisionLimit);
+
 		SpawnNewPiece();
 	}
 }
@@ -302,20 +304,16 @@ void ATetrisController::LeftRecieved()
 {
 	if(gameIsOn)
 	{
-		if(LogActions)
-			UE_LOG(LogTemp, Warning, TEXT("Left Pressed"));
-	
-		MovePiece(currentPiece, currentPiece->x + 1, currentPiece->y);
+		for(ATetrisPiece* piece : currentPiece)
+			MovePiece(piece, piece->x + 1, piece->y);
 	}
 }
 void ATetrisController::RightRecieved()
 {
 	if(gameIsOn)
 	{
-		if(LogActions)
-			UE_LOG(LogTemp, Warning, TEXT("Right Pressed"));
-	
-		MovePiece(currentPiece, currentPiece->x - 1, currentPiece->y);
+		for(ATetrisPiece* piece : currentPiece)
+			MovePiece(piece, piece->x - 1, piece->y);
 	}
 }
 #pragma endregion

@@ -24,12 +24,11 @@ protected:
 
 #pragma region Private Variables
 private:
-	UPROPERTY(EditAnywhere) bool LogActions = false;
 	UPROPERTY(EditAnywhere) float tickEvery = 1;
 	UPROPERTY(EditAnywhere) AActor* spawnPoint;
 	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AActor>> pieces;
 	UPROPERTY(EditAnywhere)	TArray<ATetrisPiece*> spawnedPieces;
-	UPROPERTY(EditAnywhere) ATetrisPiece* currentPiece;
+	TArray<ATetrisPiece*> currentPiece;
 	bool gameIsOn = false;
 	bool movingAPiece = false;
 	int lastSecondTicked = 0;
@@ -38,7 +37,7 @@ private:
 
 #pragma region Private Functions
 private:
-	int LastCollision();
+	int LastCollision(ATetrisPiece* piece);
 	void InitializePiece(ATetrisPiece& piece);
 	void SpawnNewPiece();
 	void ReorganizePieces();
@@ -46,7 +45,7 @@ private:
 	void RightRecieved();
 	void LeftRecieved();
 	void JumpRecieved();
-	void SplitPiece(ATetrisPiece* piece);
+	TArray<ATetrisPiece*>* SplitPiece(ATetrisPiece* piece);
 	TArray<FIntVector2>* FindOccupied(const ATetrisPiece* myPiece);
 #pragma endregion
 
