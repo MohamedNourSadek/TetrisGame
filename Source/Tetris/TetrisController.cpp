@@ -28,7 +28,16 @@ void ATetrisController::Tick(float DeltaTime)
 		{
 			lastSecondTicked = timeDescrete;
 			
-			int collisionLimit = LastCollision(currentPiece[0]);;
+			int collisionLimit =1;
+			
+			for(ATetrisPiece* piece : currentPiece)
+			{
+				int lastY = LastCollision(piece);
+
+				if(lastY > collisionLimit)
+					collisionLimit = lastY;
+			}
+			
 			UE_LOG(LogTemp, Display, TEXT("%d"), collisionLimit);
 			
 			if (collisionLimit > 20)
@@ -284,18 +293,27 @@ void ATetrisController::JumpRecieved()
 {
 	if(gameIsOn)
 	{
-		int collisionLimit = 1;
-
+		int collisionLimit =1;
+		
 		for(ATetrisPiece* piece : currentPiece)
 		{
-			int pieceLimit = LastCollision(piece);
+			int lastY = LastCollision(piece);
 
-			if(pieceLimit > collisionLimit)
-				collisionLimit = pieceLimit;
+			if(lastY > collisionLimit)
+				collisionLimit = lastY;
 		}
-			
+
+		TArray<int> deltaYs;
+		
 		for(ATetrisPiece* piece : currentPiece)
-			MovePiece(piece, piece->x, collisionLimit);
+		{
+			int deltaY = deltaY = piece->y - currentPiece[0]->y;;
+			deltaYs.Add(deltaY);
+		}
+
+		for(int i = 0; i < deltaYs.Num(); i++)
+			MovePiece(currentPiece[i], currentPiece[i]->x, collisionLimit + deltaYs[i]);
+
 
 		SpawnNewPiece();
 	}
@@ -304,6 +322,7 @@ void ATetrisController::LeftRecieved()
 {
 	if(gameIsOn)
 	{
+		
 		for(ATetrisPiece* piece : currentPiece)
 			MovePiece(piece, piece->x + 1, piece->y);
 	}
