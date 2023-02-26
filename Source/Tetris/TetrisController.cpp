@@ -73,7 +73,7 @@ int ATetrisController::LastCollision(ATetrisPiece* piece)
 	if (spawnedPieces.Num() == 1)
 		return 1;
 
-	TArray<FIntVector2>* occupied = FindOccupied(piece);
+	TArray<FIntVector2>* occupied = FindOccupied();
 	
 	if (occupied->Num() == 0)
 	{
@@ -187,7 +187,7 @@ void ATetrisController::MovePiece(ATetrisPiece* piece,int newX,int newY)
 		bool reachedRight = (newX < 1);
 		bool newPosOccupied = false;
 
-		TArray<FIntVector2>* occupiedPos = FindOccupied(piece);
+		TArray<FIntVector2>* occupiedPos = FindOccupied();
 
 		TArray<FIntVector2> conflicted;
 		
@@ -204,6 +204,68 @@ void ATetrisController::MovePiece(ATetrisPiece* piece,int newX,int newY)
 		if (!reachedLeft && !reachedRight && !newPosOccupied)
 		{
 			piece->MovePiece(newX,newY);
+		}
+
+		movingAPiece = false;
+	}
+}
+void ATetrisController::MovePiece(TArray<ATetrisPiece*> piece,int newX,int newY)
+{
+	if(movingAPiece != true)
+	{
+		movingAPiece = true;
+
+		bool reachedLeft = false;
+		bool reachedRight = false;
+		
+		TArray<FIntVector2> delta;
+
+		for(int i = 0; i < piece.Num(); i++)
+		{
+			int deltaX = piece[i]->x - piece[0]->x;
+			int deltaY = piece[i]->y - piece[0]->y;
+
+			delta.Add(FIntVector2(deltaX,deltaY));
+			
+			int newPos = newX + deltaX;
+			
+			if(newPos > 10)
+				reachedLeft = true;
+		}
+		for(int i = 0; i < piece.Num(); i++)
+		{
+  			int newPos = newX + delta[i].X;
+
+			if(newPos < 1)
+				reachedRight = true;
+		}
+		
+		bool newPosOccupied = false;
+
+		TArray<FIntVector2>* occupiedPos = FindOccupied();
+
+		TArray<FIntVector2> conflicted;
+		
+		for(int i = 0; i < piece.Num(); i++)
+		{
+			for(FIntVector2 v : *occupiedPos)
+			{
+				if(v.X == newX + delta[i].X && v.Y == newY + delta[i].Y)
+				{
+					conflicted.Add(v);					
+					newPosOccupied = true;
+				}
+			}
+		}
+
+		delete occupiedPos;
+	
+		if (!reachedLeft && !reachedRight && !newPosOccupied)
+		{
+			for(int i = 0; i < piece.Num(); i++)
+			{
+				piece[i]->MovePiece(newX + delta[i].X,newY + delta[i].Y);
+			}
 		}
 
 		movingAPiece = false;
@@ -261,7 +323,7 @@ TArray<ATetrisPiece*>* ATetrisController::SplitPiece(ATetrisPiece* piece)
 	piece->Destroy();
 	return splitPiece;
 }
-TArray<FIntVector2>* ATetrisController::FindOccupied(const ATetrisPiece* myPiece)
+TArray<FIntVector2>* ATetrisController::FindOccupied()
 {
 	TArray<FIntVector2>* occupied = new TArray<FIntVector2>();
 	
@@ -321,18 +383,11 @@ void ATetrisController::JumpRecieved()
 void ATetrisController::LeftRecieved()
 {
 	if(gameIsOn)
-	{
-		
-		for(ATetrisPiece* piece : currentPiece)
-			MovePiece(piece, piece->x + 1, piece->y);
-	}
+		MovePiece(currentPiece, currentPiece[0]->x + 1, currentPiece[0]->y);
 }
 void ATetrisController::RightRecieved()
 {
 	if(gameIsOn)
-	{
-		for(ATetrisPiece* piece : currentPiece)
-			MovePiece(piece, piece->x - 1, piece->y);
-	}
+		MovePiece(currentPiece, currentPiece[0]->x - 1, currentPiece[0]->y);
 }
 #pragma endregion

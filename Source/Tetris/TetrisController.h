@@ -42,11 +42,12 @@ private:
 	void SpawnNewPiece();
 	void ReorganizePieces();
 	void MovePiece(ATetrisPiece* piece,int newX,int newY);
+	void MovePiece(TArray<ATetrisPiece*> piece,int newX,int newY);
 	void RightRecieved();
 	void LeftRecieved();
 	void JumpRecieved();
 	TArray<ATetrisPiece*>* SplitPiece(ATetrisPiece* piece);
-	TArray<FIntVector2>* FindOccupied(const ATetrisPiece* myPiece);
+	TArray<FIntVector2>* FindOccupied();
 #pragma endregion
 
 };
