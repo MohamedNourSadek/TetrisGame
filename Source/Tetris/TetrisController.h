@@ -28,26 +28,31 @@ private:
 	UPROPERTY(EditAnywhere) AActor* spawnPoint;
 	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AActor>> pieces;
 	UPROPERTY(EditAnywhere)	TArray<ATetrisPiece*> spawnedPieces;
+	TMap<FIntVector2, FIntVector2> rotationTransform;
 	TArray<ATetrisPiece*> currentPiece;
 	bool gameIsOn = false;
 	bool movingAPiece = false;
 	int lastSecondTicked = 0;
 	float timeSinceStartUp = 0;
+
 #pragma endregion
 
 #pragma region Private Functions
 private:
-	int LastCollision(ATetrisPiece* piece);
+	int LastCollision(TArray<ATetrisPiece*>* piece);
 	void InitializePiece(ATetrisPiece& piece);
 	void SpawnNewPiece();
 	void ReorganizePieces();
 	void MovePiece(ATetrisPiece* piece,int newX,int newY);
 	void MovePiece(TArray<ATetrisPiece*> piece,int newX,int newY);
+	void RotatePiece(TArray<ATetrisPiece*>& piece);
 	void RightRecieved();
 	void LeftRecieved();
 	void JumpRecieved();
+	void RotateRecieved();
 	TArray<ATetrisPiece*>* SplitPiece(ATetrisPiece* piece);
 	TArray<FIntVector2>* FindOccupied();
+	void InitializeTransformDictionary();
 #pragma endregion
 
 };

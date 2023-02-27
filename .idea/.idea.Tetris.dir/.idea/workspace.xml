@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="10737dd8-ffec-412a-8e6c-7edddec0f794" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Tetris.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Tetris.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultInput.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultInput.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisController.h" afterDir="false" />
     </list>
@@ -112,7 +113,8 @@
       <workItem from="1677342765883" duration="8475000" />
       <workItem from="1677425958093" duration="5607000" />
       <workItem from="1677442270333" duration="453000" />
-      <workItem from="1677442809546" duration="1492000" />
+      <workItem from="1677442809546" duration="2104000" />
+      <workItem from="1677512653172" duration="9879000" />
     </task>
     <servers />
   </component>
