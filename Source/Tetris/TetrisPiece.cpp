@@ -20,18 +20,3 @@ void ATetrisPiece::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ATetrisPiece::MovePiece(int newX, int newY)
-{
-	x = newX;
-	y = newY; 
-
-	FVector currentWorldLocation = GetActorLocation();
-	FVector newLocation =
-		FVector(
-			100 * newX,
-			100 * newY,
-			currentWorldLocation.Z
-		);
-	
-	SetActorLocation(newLocation);
-}

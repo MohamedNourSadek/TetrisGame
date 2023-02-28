@@ -4,8 +4,13 @@
 
 
 #pragma region Unreal Functions
-void ATetrisController::InitializeTransformDictionary()
+ATetrisController::ATetrisController()
 {
+	PrimaryActorTick.bCanEverTick = true;
+}
+void ATetrisController::InitializeData()
+{
+	//Initialize Transformation Matrix
 	rotationTransform.Add(FIntVector2(0,0), FIntVector2(2,0));
 	rotationTransform.Add(FIntVector2(1,0), FIntVector2(2,1));
 	rotationTransform.Add(FIntVector2(2,0), FIntVector2(2,2));
@@ -15,15 +20,16 @@ void ATetrisController::InitializeTransformDictionary()
 	rotationTransform.Add(FIntVector2(0,2), FIntVector2(0,0));
 	rotationTransform.Add(FIntVector2(1,2), FIntVector2(0,1));
 	rotationTransform.Add(FIntVector2(2,2), FIntVector2(0,2));
-}
-ATetrisController::ATetrisController()
-{
-	PrimaryActorTick.bCanEverTick = true;
+
+	//Initialize possible pieces
+
+	prototypePieces.Add(TArray<FIntVector2> {FIntVector2(0,0)});
+	prototypePieces.Add(TArray<FIntVector2> {FIntVector2(0,0), FIntVector2(1,0),FIntVector2(-1,0)});
 }
 void ATetrisController::BeginPlay()
 {
 	Super::BeginPlay();
-	InitializeTransformDictionary();
+	InitializeData();
 	SpawnNewPiece();
 	gameIsOn =true;
 }
@@ -37,7 +43,7 @@ void ATetrisController::Tick(float DeltaTime)
 	
 		int timeDescrete = (int)(timeSinceStartUp/ tickEvery);
 	
-		if (timeDescrete != lastSecondTicked && !movingAPiece)
+		if ((timeDescrete != lastSecondTicked) && (!movingAPiece))
 		{
 			lastSecondTicked = timeDescrete;
 			
@@ -50,10 +56,10 @@ void ATetrisController::Tick(float DeltaTime)
 				UE_LOG(LogTemp, Display, TEXT("Game is Over"))
 				gameIsOn = false;
 			}
-			else if ((currentPiece)[0]->y > collisionLimit)
+			else if (currentPiece.position.Y > collisionLimit)
 			{
-				for(ATetrisPiece* piece : currentPiece)
-					MovePiece(piece, piece->x, piece->y - 1);
+				FIntVector2 newPosition = FIntVector2(currentPiece.position.X, currentPiece.position.Y - 1);
+				currentPiece.Move(newPosition);
 			}
 			else
 			{
@@ -74,6 +80,39 @@ void ATetrisController::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 #pragma endregion
 
 #pragma region Gameplay Functions
+void ATetrisController::SpawnNewPiece()
+{
+	ReorganizePieces();
+
+	TArray<FIntVector2> newPiecePrototype = GetRandomProtoype();
+	
+	CompoundPiece newPiece;
+	newPiece.position = 
+	for(FIntVector2 newSubPiecePrototype : newPiece)
+	{
+		ATetrisPiece* piece = Cast<ATetrisPiece>(GetWorld()->SpawnActor(unitPiece, &spawnPoint->GetTransform()));
+
+		FVector deltaNewLocation =
+			FVector(
+				100 * newSubPiecePrototype.X,
+				100 * newSubPiecePrototype.Y,
+				piece->GetActorLocation().Z);
+
+		piece->SetActorLocation(piece->GetActorLocation() + deltaNewLocation);
+
+		piece->x = (spawnPoint->GetActorLocation().X / 100) + newSubPiecePrototype.X;
+		piece->y = (spawnPoint->GetActorLocation().Y / 100) + newSubPiecePrototype.Y;
+
+		spawnedPieces.Add(piece);
+	}
+}
+TArray<FIntVector2> ATetrisController::GetRandomProtoype()
+{
+	int randomPiece = FMath::RandRange(0,prototypePieces.Num() - 1);
+	TArray<FIntVector2> newPiecePrototype = prototypePieces[randomPiece];
+	return newPiecePrototype;
+}
+
 int ATetrisController::LastCollision(TArray<ATetrisPiece*>* piece)
 {
 	TArray<FIntVector2>* occupied = FindOccupied();
@@ -136,21 +175,6 @@ TArray<FIntVector2>* ATetrisController::FindOccupied()
 	}
 
 	return occupied;
-}
-void ATetrisController::InitializePiece(ATetrisPiece& piece)
-{
-	piece.x = spawnPoint->GetActorLocation().X / 100;
-	piece.y = spawnPoint->GetActorLocation().Y / 100;
-	
-	spawnedPieces.Add(&piece);
-	currentPiece = *SplitPiece(&piece);
-}
-void ATetrisController::SpawnNewPiece()
-{
-	ReorganizePieces();
-	int randomPiece = FMath::RandRange(0,pieces.Num() - 1);
-	ATetrisPiece* piece = Cast<ATetrisPiece>(GetWorld()->SpawnActor(pieces[randomPiece], &spawnPoint->GetTransform()));
-	InitializePiece(*piece);
 }
 void ATetrisController::ReorganizePieces()
 {
@@ -361,7 +385,7 @@ TArray<ATetrisPiece*>* ATetrisController::SplitPiece(ATetrisPiece* piece)
 	
 	for(FIntVector2 bodyPiece: piece->geometry)
 	{
-		ATetrisPiece* newPiece = Cast<ATetrisPiece>(GetWorld()->SpawnActor(pieces[0], &spawnPoint->GetTransform()));
+		ATetrisPiece* newPiece = Cast<ATetrisPiece>(GetWorld()->SpawnActor(unitPiece, &spawnPoint->GetTransform()));
 
 		MovePiece(
 			newPiece,

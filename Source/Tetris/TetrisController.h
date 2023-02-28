@@ -5,8 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "TetrisPiece.h"
+#include "CompoundPiece.h"
+#include "SubPiece.h"
 #include "TetrisController.generated.h"
-
 
 UCLASS()
 class TETRIS_API ATetrisController : public APawn
@@ -26,10 +27,13 @@ protected:
 private:
 	UPROPERTY(EditAnywhere) float tickEvery = 1;
 	UPROPERTY(EditAnywhere) AActor* spawnPoint;
-	UPROPERTY(EditAnywhere) TArray<TSubclassOf<AActor>> pieces;
-	UPROPERTY(EditAnywhere)	TArray<ATetrisPiece*> spawnedPieces;
+	UPROPERTY(EditAnywhere) TSubclassOf<AActor> unitPiece;
+
+
+	TArray<TArray<FIntVector2>> prototypePieces;
 	TMap<FIntVector2, FIntVector2> rotationTransform;
-	TArray<ATetrisPiece*> currentPiece;
+	CompoundPiece currentPiece;
+	TArray<SubPiece*> spawnedPieces;
 	bool gameIsOn = false;
 	bool movingAPiece = false;
 	int lastSecondTicked = 0;
@@ -39,20 +43,24 @@ private:
 
 #pragma region Private Functions
 private:
-	int LastCollision(TArray<ATetrisPiece*>* piece);
-	void InitializePiece(ATetrisPiece& piece);
+	void InitializeData();
 	void SpawnNewPiece();
+	void InitializePiece(ATetrisPiece& piece);
+
+	int LastCollision(TArray<ATetrisPiece*>* piece);
 	void ReorganizePieces();
+	TArray<ATetrisPiece*>* SplitPiece(ATetrisPiece* piece);
+	TArray<FIntVector2>* FindOccupied();
+	TArray<FIntVector2> GetRandomProtoype();
+
 	void MovePiece(ATetrisPiece* piece,int newX,int newY);
 	void MovePiece(TArray<ATetrisPiece*> piece,int newX,int newY);
 	void RotatePiece(TArray<ATetrisPiece*>& piece);
+
 	void RightRecieved();
 	void LeftRecieved();
 	void JumpRecieved();
 	void RotateRecieved();
-	TArray<ATetrisPiece*>* SplitPiece(ATetrisPiece* piece);
-	TArray<FIntVector2>* FindOccupied();
-	void InitializeTransformDictionary();
 #pragma endregion
 
 };
