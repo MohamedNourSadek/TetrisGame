@@ -6,11 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="10737dd8-ffec-412a-8e6c-7edddec0f794" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Tetris.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Tetris.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_TetrisPiece.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_TetrisPiece.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Maps/GameMap/C/0Q/6VER2EAGL7UJP2WJ86LJWI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Maps/GameMap/C/0Q/6VER2EAGL7UJP2WJ86LJWI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Tetris/CompoundPiece.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/CompoundPiece.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Tetris/CompoundPiece.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/CompoundPiece.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Tetris/SubPiece.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/SubPiece.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_TetrisPiece2.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_TetrisPiece3.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_TetrisPiece4.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_TetrisPiece5.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_TetrisPiece6.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisController.h" afterDir="false" />
     </list>
@@ -35,7 +35,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "XThreadsFramesViewSplitterKey": "0.36681223",
+    "XThreadsFramesViewSplitterKey": "0.36738703",
+    "settings.editor.selected.configurable": "ReSpellerSettingsId",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -122,7 +123,7 @@
       <workItem from="1677660816521" duration="4130000" />
       <workItem from="1677670192040" duration="59000" />
       <workItem from="1677674462629" duration="4366000" />
-      <workItem from="1677685614689" duration="6046000" />
+      <workItem from="1677685614689" duration="15214000" />
     </task>
     <servers />
   </component>

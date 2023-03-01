@@ -31,7 +31,6 @@ private:
 
 
 	TArray<TArray<FIntVector2>> prototypePieces;
-	TMap<FIntVector2, FIntVector2> rotationTransform;
 	CompoundPiece* currentPiece;
 	TArray<SubPiece*> spawnedPieces;
 	bool gameIsOn = false;
@@ -46,7 +45,9 @@ private:
 	void InitializeData();
 	void SpawnNewPiece();
 
+	FIntVector2 TransformSpace(FIntVector2 input);
 	bool CanMove(CompoundPiece* compPiece, FIntVector2 newPosition);
+	bool IsPositionPossible(FIntVector2 newPosition);
 	int GetFirstCollisionY(CompoundPiece* compoundPiece);
 	void ReorganizePieces();
 	TArray<int>* GetCompleteRows();

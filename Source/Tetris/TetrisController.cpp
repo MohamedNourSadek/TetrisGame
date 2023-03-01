@@ -10,21 +10,12 @@ ATetrisController::ATetrisController()
 }
 void ATetrisController::InitializeData()
 {
-	//Initialize Transformation Matrix
-	rotationTransform.Add(FIntVector2(0,0), FIntVector2(2,0));
-	rotationTransform.Add(FIntVector2(1,0), FIntVector2(2,1));
-	rotationTransform.Add(FIntVector2(2,0), FIntVector2(2,2));
-	rotationTransform.Add(FIntVector2(0,1), FIntVector2(1,0));
-	rotationTransform.Add(FIntVector2(1,1), FIntVector2(1,1));
-	rotationTransform.Add(FIntVector2(2,1), FIntVector2(1,2));
-	rotationTransform.Add(FIntVector2(0,2), FIntVector2(0,0));
-	rotationTransform.Add(FIntVector2(1,2), FIntVector2(0,1));
-	rotationTransform.Add(FIntVector2(2,2), FIntVector2(0,2));
-
-	//Initialize possible pieces
-
-	prototypePieces.Add(TArray<FIntVector2> {FIntVector2(0,0)});
+	//Adding pieces
+	prototypePieces.Add(TArray<FIntVector2> {FIntVector2(0,0)}); 
 	prototypePieces.Add(TArray<FIntVector2> {FIntVector2(0,0), FIntVector2(1,0),FIntVector2(-1,0)});
+	prototypePieces.Add(TArray<FIntVector2> {FIntVector2(0,0), FIntVector2(0,-1),FIntVector2(0,1)});
+	prototypePieces.Add(TArray<FIntVector2> {FIntVector2(0,0), FIntVector2(1,0),FIntVector2(-1,0) , FIntVector2(0,1)});
+	prototypePieces.Add(TArray<FIntVector2> {FIntVector2(0,0), FIntVector2(1,0),FIntVector2(-1,0) , FIntVector2(-1,1)});
 }
 void ATetrisController::BeginPlay()
 {
@@ -54,7 +45,7 @@ void ATetrisController::Tick(float DeltaTime)
 			if (collisionLimit > 20)
 			{
 				UE_LOG(LogTemp, Display, TEXT("Game is Over"))
-				//gameIsOn = false;
+				gameIsOn = false;
 			}
 			else if (currentPiece->position.Y > collisionLimit)
 			{
@@ -80,6 +71,11 @@ void ATetrisController::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 #pragma endregion
 
 #pragma region Gameplay Functions
+FIntVector2 ATetrisController::TransformSpace(FIntVector2 input)
+{
+	return FIntVector2( -input.Y ,input.X);
+}
+
 void ATetrisController::SpawnNewPiece()
 {
 	ReorganizePieces();
@@ -121,18 +117,12 @@ TArray<FIntVector2> ATetrisController::GetRandomProtoype()
 	TArray<FIntVector2> newPiecePrototype = prototypePieces[randomPiece];
 	return newPiecePrototype;
 }
-
 int ATetrisController::GetFirstCollisionY(CompoundPiece* compoundPiece)
 {
 	TArray<FIntVector2>* occupied = FindOccupied();
 	
-	if (occupied->Num() == 0)
-	{
-		delete occupied;
-		return 1;
-	}
-
 	int startY = 20;
+
 	for(SubPiece* subPiece : compoundPiece->subPieces)
 	{
 		if(subPiece->absPosition.Y < startY)
@@ -143,16 +133,26 @@ int ATetrisController::GetFirstCollisionY(CompoundPiece* compoundPiece)
 	{
 		for(SubPiece* subPiece : compoundPiece->subPieces)
 		{
+			int newYPos = (y + subPiece->relativePosition.Y);
+			
 			for (FIntVector2 point : *occupied)
 			{
-				if(subPiece->absPosition.X == point.X && (y + subPiece->relativePosition.Y == point.Y))
+				if(subPiece->absPosition.X == point.X && (newYPos == point.Y))
 				{
 					delete occupied;
 					return y + 1;
 				}
 			}
+
+			if(newYPos < 1)
+			{
+				delete occupied;
+				return y + 1;
+			}
 		}
 	}
+
+	
 	
 	delete occupied;
 	return 1;
@@ -224,12 +224,23 @@ void ATetrisController::ReorganizePieces()
 		subPiece->myPiece->Destroy();
 		delete subPiece;
 	}
+
 	for(int completeRow : *compelteRows)
 	{
 		for(SubPiece* subPiece : spawnedPieces)
 		{
 			if(subPiece->absPosition.Y > completeRow)
-				subPiece->Move(FIntVector2(subPiece->absPosition.X, subPiece->absPosition.Y - 1));
+			{
+				int numOfCompleteRowsUnderNeathIt = 0;
+
+				for(int AcompleteRow : *compelteRows)
+				{
+					if(subPiece->absPosition.Y > AcompleteRow)
+						numOfCompleteRowsUnderNeathIt++;
+				}
+
+				subPiece->Move(FIntVector2(subPiece->absPosition.X, subPiece->absPosition.Y - numOfCompleteRowsUnderNeathIt));
+			}
 		}
 	}
 
@@ -248,7 +259,7 @@ bool ATetrisController::CanMove(CompoundPiece* compundPiece, FIntVector2 newPosi
 		for(SubPiece* subPiece: compundPiece->subPieces)
 		{
 			FIntVector2 newSubPiecePosition = FIntVector2(newPosition.X + subPiece->relativePosition.X,
-													newPosition.Y + subPiece->relativePosition.Y);
+														newPosition.Y + subPiece->relativePosition.Y);
 
 			if(newSubPiecePosition.X > 10)
 			{
@@ -261,11 +272,51 @@ bool ATetrisController::CanMove(CompoundPiece* compundPiece, FIntVector2 newPosi
 
 			for (FIntVector2 occupied : *occupiedPos)
 			{
-				if((subPiece->absPosition.X == occupied.X) && (subPiece->absPosition.Y == occupied.Y))
+				if((newPosition.X + subPiece->relativePosition.X == occupied.X) &&
+				   (newPosition.Y + subPiece->relativePosition.Y == occupied.Y))
 				{
 					newPosOccupied = true;
 				}
 			}
+		}
+
+		if(!reachedLeft && !reachedRight && !newPosOccupied)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+bool ATetrisController::IsPositionPossible(FIntVector2 newPosition)
+{
+	if(movingAPiece != true)
+	{
+		bool reachedLeft = false;
+		bool reachedRight = false;
+		bool newPosOccupied = false;
+
+		TArray<FIntVector2>* occupiedPos = FindOccupied();
+
+		if(newPosition.X > 10)
+		{
+			reachedLeft = true;
+		}
+		else if(newPosition.X < 1)
+		{
+			reachedRight = true;
+		}
+
+		for (FIntVector2 occupied : *occupiedPos)
+		{
+			if((newPosition.X == occupied.X) && (newPosition.Y == occupied.Y))
+				newPosOccupied = true;
 		}
 
 		if(!reachedLeft && !reachedRight && !newPosOccupied)
@@ -289,18 +340,31 @@ void ATetrisController::RotatePiece()
 	
 	for(SubPiece* subPiece : currentPiece->subPieces)
 	{
-		FIntVector2 newRelativePos = rotationTransform.FindRef(subPiece->relativePosition);
-		FIntVector2 newAbsPosition = FIntVector2(subPiece->absPosition.X + newRelativePos.X, subPiece->absPosition.X + newRelativePos.Y);
-		
+		FIntVector2 newRelativePos = TransformSpace(subPiece->relativePosition);
+		FIntVector2 newAbsPosition = FIntVector2(currentPiece->position.X + newRelativePos.X,
+												 currentPiece->position.Y +newRelativePos.Y);
 		newRelativePositions.Add(newRelativePos);
 		newAbsPositions.Add(newAbsPosition);
 	}
 
-	for(int i = 0; i < newAbsPositions.Num(); i++)
+	bool canRotate = true;
+
+	for(FIntVector2 newAbsPos : newAbsPositions)
 	{
-		currentPiece->subPieces[i]->relativePosition = newRelativePositions[i];
-		currentPiece->subPieces[i]->Move(newAbsPositions[i]);
+		if(IsPositionPossible(newAbsPos) == false)
+			canRotate = false;
 	}
+
+	if(canRotate)
+	{
+		for(int i = 0; i < newAbsPositions.Num(); i++)
+		{
+			currentPiece->subPieces[i]->relativePosition = newRelativePositions[i];
+			currentPiece->subPieces[i]->absPosition = newAbsPositions[i]; 
+			currentPiece->subPieces[i]->Move(newAbsPositions[i]);
+		}
+	}
+
 }
 #pragma endregion
 
