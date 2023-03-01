@@ -218,6 +218,7 @@ void ATetrisController::ReorganizePieces()
 				piecesToRemove.Add(subPiece);
 		}
 	}
+	
 	for(SubPiece* subPiece : piecesToRemove)
 	{
 		spawnedPieces.Remove(subPiece);
@@ -225,25 +226,30 @@ void ATetrisController::ReorganizePieces()
 		delete subPiece;
 	}
 
-	for(int completeRow : *compelteRows)
+	TArray<int> reductionIndices;
+
+	for(int i = 1; i <= 20; i++)
 	{
-		for(SubPiece* subPiece : spawnedPieces)
+		int numOfCompleteRowsUnderNeathIt = 0;
+
+		for(int completeRow : *compelteRows)
 		{
-			if(subPiece->absPosition.Y > completeRow)
+			if(i>completeRow)
 			{
-				int numOfCompleteRowsUnderNeathIt = 0;
-
-				for(int AcompleteRow : *compelteRows)
-				{
-					if(subPiece->absPosition.Y > AcompleteRow)
-						numOfCompleteRowsUnderNeathIt++;
-				}
-
-				subPiece->Move(FIntVector2(subPiece->absPosition.X, subPiece->absPosition.Y - numOfCompleteRowsUnderNeathIt));
+				numOfCompleteRowsUnderNeathIt++;
 			}
 		}
+
+		reductionIndices.Add(numOfCompleteRowsUnderNeathIt);
 	}
 
+	for(SubPiece* subPiece : spawnedPieces)
+	{
+		subPiece->Move(
+			FIntVector2(subPiece->absPosition.X,
+				subPiece->absPosition.Y - reductionIndices[subPiece->absPosition.Y]));
+	}
+	
 	delete compelteRows;
 }
 bool ATetrisController::CanMove(CompoundPiece* compundPiece, FIntVector2 newPosition)
