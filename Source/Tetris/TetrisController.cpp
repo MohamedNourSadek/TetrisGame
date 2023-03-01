@@ -54,12 +54,12 @@ void ATetrisController::Tick(float DeltaTime)
 			if (collisionLimit > 20)
 			{
 				UE_LOG(LogTemp, Display, TEXT("Game is Over"))
-				gameIsOn = false;
+				//gameIsOn = false;
 			}
-			else if (currentPiece.position.Y > collisionLimit)
+			else if (currentPiece->position.Y > collisionLimit)
 			{
-				FIntVector2 newPosition = FIntVector2(currentPiece.position.X, currentPiece.position.Y - 1);
-				currentPiece.Move(newPosition);
+				FIntVector2 newPosition = FIntVector2(currentPiece->position.X, currentPiece->position.Y - 1);
+				currentPiece->Move(newPosition);
 			}
 			else
 			{
@@ -86,32 +86,34 @@ void ATetrisController::SpawnNewPiece()
 
 	TArray<FIntVector2> newPiecePrototype = GetRandomProtoype();
 	
-	CompoundPiece compoundPiece;
-
-	compoundPiece.position = FIntVector2(((spawnPoint->GetActorLocation().X / 100),spawnPoint->GetActorLocation().Y / 100));
+	CompoundPiece* compoundPiece = new CompoundPiece();
+	
+	compoundPiece->position.X = (spawnPoint->GetActorLocation().X / 100);
+	compoundPiece->position.Y = (spawnPoint->GetActorLocation().Y / 100);
 	
 	for(FIntVector2 newSubPiecePrototype : newPiecePrototype)
 	{
 		ATetrisPiece* piece = Cast<ATetrisPiece>(GetWorld()->SpawnActor(unitPiece, &spawnPoint->GetTransform()));
 
-		FVector deltaNewLocation =
-			FVector(
-				100 * newSubPiecePrototype.X,
-				100 * newSubPiecePrototype.Y,
+		SubPiece* subPiece = new SubPiece();
+
+		subPiece->relativePosition = newSubPiecePrototype;
+		subPiece->absPosition = FIntVector2(subPiece->relativePosition.X + compoundPiece->position.X,
+											subPiece->relativePosition.Y + compoundPiece->position.Y);
+		subPiece->myPiece = piece;
+
+		FVector newLocation 
+			(100 * subPiece->absPosition.X,
+			 100 * subPiece->absPosition.Y,
 				piece->GetActorLocation().Z);
 
-		piece->SetActorLocation(piece->GetActorLocation() + deltaNewLocation);
+		piece->SetActorLocation(newLocation);
 
-		SubPiece subPiece;
-
-		subPiece.relativePosition = newSubPiecePrototype;
-		subPiece.absPosition = FIntVector2(subPiece.relativePosition.X + compoundPiece.position.X,
-											subPiece.relativePosition.Y + compoundPiece.position.Y);
-		subPiece.myPiece = piece;
-
-		compoundPiece.subPieces.Add(subPiece);
-		spawnedPieces.Add(&subPiece);
+		compoundPiece->subPieces.Add(subPiece);
+		spawnedPieces.Add(subPiece);
 	}
+
+	currentPiece = compoundPiece;
 }
 TArray<FIntVector2> ATetrisController::GetRandomProtoype()
 {
@@ -120,7 +122,7 @@ TArray<FIntVector2> ATetrisController::GetRandomProtoype()
 	return newPiecePrototype;
 }
 
-int ATetrisController::GetFirstCollisionY(CompoundPiece compoundPiece)
+int ATetrisController::GetFirstCollisionY(CompoundPiece* compoundPiece)
 {
 	TArray<FIntVector2>* occupied = FindOccupied();
 	
@@ -131,22 +133,22 @@ int ATetrisController::GetFirstCollisionY(CompoundPiece compoundPiece)
 	}
 
 	int startY = 20;
-	for(SubPiece &subPiece : compoundPiece.subPieces)
+	for(SubPiece* subPiece : compoundPiece->subPieces)
 	{
-		if(subPiece.absPosition.Y < startY)
-			startY = subPiece.absPosition.Y;
+		if(subPiece->absPosition.Y < startY)
+			startY = subPiece->absPosition.Y;
 	}
 
 	for(int y = startY; y >= 1; y--)
 	{
-		for(SubPiece &subPiece : compoundPiece.subPieces)
+		for(SubPiece* subPiece : compoundPiece->subPieces)
 		{
 			for (FIntVector2 point : *occupied)
 			{
-				if(subPiece.absPosition.X == point.X && subPiece.absPosition.Y == point.Y)
+				if(subPiece->absPosition.X == point.X && (y + subPiece->relativePosition.Y == point.Y))
 				{
 					delete occupied;
-					return subPiece.absPosition.Y + 1;
+					return y + 1;
 				}
 			}
 		}
@@ -163,9 +165,9 @@ TArray<FIntVector2>* ATetrisController::FindOccupied()
 	{
 		bool oneOfMyPieces = false;
 
-		for(SubPiece &mySubPiece : currentPiece.subPieces)
+		for(SubPiece* mySubPiece : currentPiece->subPieces)
 		{
-			if (mySubPiece.absPosition == subPiece->absPosition)
+			if (mySubPiece->absPosition == subPiece->absPosition)
 				oneOfMyPieces = true;
 		}
 		
@@ -177,10 +179,10 @@ TArray<FIntVector2>* ATetrisController::FindOccupied()
 
 	return occupied;
 }
-void ATetrisController::ReorganizePieces()
+TArray<int>* ATetrisController::GetCompleteRows()
 {
-	//finding complete rows
-	TArray<int> compelteRows;
+	TArray<int>* compelteRows = new TArray<int>();
+	
 	for(int i = 1; i <= 20; i++)
 	{
 		int totalSum = 0;
@@ -195,34 +197,45 @@ void ATetrisController::ReorganizePieces()
 		}
 
 		if(totalSum == 10)
-			compelteRows.Add(i);
+			compelteRows->Add(i);
 	}
 
+	return compelteRows;
+}
+void ATetrisController::ReorganizePieces()
+{
+	//finding complete rows
+	TArray<int>* compelteRows = GetCompleteRows();
+
 	//destroying and moving pieces
-	for(int completeRow : compelteRows)
+	TArray<SubPiece*> piecesToRemove;
+
+	for(int completeRow : *compelteRows)
 	{
-		TArray<SubPiece*> piecesToRemove;
-		
 		for(SubPiece* subPiece : spawnedPieces)
 		{
 			if(subPiece->absPosition.Y == completeRow)
 				piecesToRemove.Add(subPiece);
 		}
-
-		for(SubPiece* subPiece : spawnedPieces)
-		{
-			spawnedPieces.Remove(subPiece);
-			subPiece->myPiece->Destroy();
-		}
-
+	}
+	for(SubPiece* subPiece : piecesToRemove)
+	{
+		spawnedPieces.Remove(subPiece);
+		subPiece->myPiece->Destroy();
+		delete subPiece;
+	}
+	for(int completeRow : *compelteRows)
+	{
 		for(SubPiece* subPiece : spawnedPieces)
 		{
 			if(subPiece->absPosition.Y > completeRow)
 				subPiece->Move(FIntVector2(subPiece->absPosition.X, subPiece->absPosition.Y - 1));
 		}
 	}
+
+	delete compelteRows;
 }
-bool ATetrisController::CanMove(CompoundPiece compundPiece, FIntVector2 newPosition)
+bool ATetrisController::CanMove(CompoundPiece* compundPiece, FIntVector2 newPosition)
 {
 	if(movingAPiece != true)
 	{
@@ -232,10 +245,10 @@ bool ATetrisController::CanMove(CompoundPiece compundPiece, FIntVector2 newPosit
 
 		TArray<FIntVector2>* occupiedPos = FindOccupied();
 
-		for(SubPiece &subPiece: compundPiece.subPieces)
+		for(SubPiece* subPiece: compundPiece->subPieces)
 		{
-			FIntVector2 newSubPiecePosition = FIntVector2(newPosition.X + subPiece.relativePosition.X,
-													newPosition.Y + subPiece.relativePosition.Y);
+			FIntVector2 newSubPiecePosition = FIntVector2(newPosition.X + subPiece->relativePosition.X,
+													newPosition.Y + subPiece->relativePosition.Y);
 
 			if(newSubPiecePosition.X > 10)
 			{
@@ -246,9 +259,9 @@ bool ATetrisController::CanMove(CompoundPiece compundPiece, FIntVector2 newPosit
 				reachedRight = true;
 			}
 
-			for (FIntVector2 occupied : occupiedPos)
+			for (FIntVector2 occupied : *occupiedPos)
 			{
-				if((subPiece.absPosition.X == occupied.X) && (subPiece.absPosition.Y == occupied.Y))
+				if((subPiece->absPosition.X == occupied.X) && (subPiece->absPosition.Y == occupied.Y))
 				{
 					newPosOccupied = true;
 				}
@@ -274,10 +287,10 @@ void ATetrisController::RotatePiece()
 	TArray<FIntVector2> newAbsPositions;
 	TArray<FIntVector2> newRelativePositions;
 	
-	for(SubPiece& subPiece : currentPiece)
+	for(SubPiece* subPiece : currentPiece->subPieces)
 	{
-		FIntVector2 newRelativePos = rotationTransform.FindRef(subPiece.relativePosition);
-		FIntVector2 newAbsPosition = FIntVector2(subPiece.absPosition.X + newRelativePos.X, subPiece.absPosition.X + newRelativePos.Y);
+		FIntVector2 newRelativePos = rotationTransform.FindRef(subPiece->relativePosition);
+		FIntVector2 newAbsPosition = FIntVector2(subPiece->absPosition.X + newRelativePos.X, subPiece->absPosition.X + newRelativePos.Y);
 		
 		newRelativePositions.Add(newRelativePos);
 		newAbsPositions.Add(newAbsPosition);
@@ -285,8 +298,8 @@ void ATetrisController::RotatePiece()
 
 	for(int i = 0; i < newAbsPositions.Num(); i++)
 	{
-		currentPiece.subPieces[i].relativePosition = newRelativePositions[i];
-		currentPiece.subPieces[i].Move(newAbsPositions[i]);
+		currentPiece->subPieces[i]->relativePosition = newRelativePositions[i];
+		currentPiece->subPieces[i]->Move(newAbsPositions[i]);
 	}
 }
 #pragma endregion
@@ -297,7 +310,7 @@ void ATetrisController::JumpRecieved()
 	if(gameIsOn)
 	{
 		int collisionLimit = GetFirstCollisionY(currentPiece);
-		currentPiece.Move(FIntVector2(currentPiece.position.X, collisionLimit));
+		currentPiece->Move(FIntVector2(currentPiece->position.X, collisionLimit));
 		SpawnNewPiece();
 	}
 }
@@ -310,20 +323,20 @@ void ATetrisController::LeftRecieved()
 {
 	if(gameIsOn)
 	{
-		FIntVector2 newPosition = FIntVector2(currentPiece.position.X - 1, currentPiece.position.Y);
+		FIntVector2 newPosition = FIntVector2(currentPiece->position.X + 1, currentPiece->position.Y);
 
 		if(CanMove(currentPiece, newPosition))
-			currentPiece.Move(newPosition);
+			currentPiece->Move(newPosition);
 	}
 }
 void ATetrisController::RightRecieved()
 {
 	if(gameIsOn)
 	{
-		FIntVector2 newPosition = FIntVector2(currentPiece.position.X + 1, currentPiece.position.Y);
+		FIntVector2 newPosition = FIntVector2(currentPiece->position.X - 1, currentPiece->position.Y);
 
 		if(CanMove(currentPiece, newPosition))
-			currentPiece.Move(newPosition);
+			currentPiece->Move(newPosition);
 	}
 }
 #pragma endregion

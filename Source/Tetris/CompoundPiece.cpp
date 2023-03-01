@@ -14,11 +14,11 @@ void CompoundPiece::Move(FIntVector2 newAbsPosition)
 {
 	position = newAbsPosition;
 	
-	for(SubPiece &subPiece : subPieces)
+	for(SubPiece* subPiece : subPieces)
 	{
-		subPiece.Move(
+		subPiece->Move(
 			FIntVector2(
-				newAbsPosition.X + subPiece.relativePosition.X,
-				newAbsPosition.Y + subPiece.relativePosition.Y));
+				newAbsPosition.X + subPiece->relativePosition.X,
+				newAbsPosition.Y + subPiece->relativePosition.Y));
 	}
 }

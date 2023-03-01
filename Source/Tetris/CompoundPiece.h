@@ -15,6 +15,6 @@ public:
 	~CompoundPiece();
 	void Move(FIntVector2 newAbsPosition);
 	
-	TArray<SubPiece> subPieces;
+	TArray<SubPiece*> subPieces;
 	FIntVector2 position;
 };

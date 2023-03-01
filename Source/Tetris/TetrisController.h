@@ -32,7 +32,7 @@ private:
 
 	TArray<TArray<FIntVector2>> prototypePieces;
 	TMap<FIntVector2, FIntVector2> rotationTransform;
-	CompoundPiece currentPiece;
+	CompoundPiece* currentPiece;
 	TArray<SubPiece*> spawnedPieces;
 	bool gameIsOn = false;
 	bool movingAPiece = false;
@@ -45,17 +45,13 @@ private:
 private:
 	void InitializeData();
 	void SpawnNewPiece();
-	void InitializePiece(ATetrisPiece& piece);
 
-	bool ATetrisController::CanMove(CompoundPiece compundPiece, FIntVector2 newPosition);
-	int GetFirstCollisionY(CompoundPiece compoundPiece);
+	bool CanMove(CompoundPiece* compPiece, FIntVector2 newPosition);
+	int GetFirstCollisionY(CompoundPiece* compoundPiece);
 	void ReorganizePieces();
-	TArray<ATetrisPiece*>* SplitPiece(ATetrisPiece* piece);
+	TArray<int>* GetCompleteRows();
 	TArray<FIntVector2>* FindOccupied();
 	TArray<FIntVector2> GetRandomProtoype();
-
-	void MovePiece(ATetrisPiece* piece,int newX,int newY);
-	void MovePiece(TArray<ATetrisPiece*> piece,int newX,int newY);
 	void RotatePiece();
 
 	void RightRecieved();

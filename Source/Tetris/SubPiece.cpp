@@ -12,6 +12,8 @@ SubPiece::~SubPiece()
 
 void SubPiece::Move(FIntVector2 newAbsPosition)
 {
+	absPosition = newAbsPosition;
+	
 	FVector newLocation =
 		FVector(
 			100 * newAbsPosition.X,
