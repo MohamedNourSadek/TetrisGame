@@ -15,8 +15,6 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/../../Program Files (x86)/UE_5.1/Engine/Source/Runtime/Core/Public/Containers/Array.h" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../../Program Files (x86)/UE_5.1/Engine/Source/Runtime/CoreUObject/Public/UObject/Class.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/Tetris/TetrisPiece.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -27,31 +25,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.500994&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "XThreadsFramesViewSplitterKey": "0.500994",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\moham\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\moham\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\moham\\AppData\\Local\\Symbols\\src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\msi\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache",
+      "C:\\Users\\msi\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache",
+      "C:\\Users\\msi\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="Tetris" type="Uproject" factoryName="rider.uproject">
       <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Tetris.uproject" />
       <configuration_2>
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="C:\Program Files (x86)\UE_5.1\Engine\Binaries\Win64\UnrealEditor-Win64-DebugGame.exe" />
-        <option name="WORKING_DIRECTORY" value="C:\Program Files (x86)\UE_5.1" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Work Projects\TetrisGame\Tetris.uproject&quot;" />
+        <option name="EXECUTABLE_PATH" value="E:\Unreal Engine 5\UE_5.1\Engine\Binaries\Win64\UnrealEditor-Win64-DebugGame.exe" />
+        <option name="WORKING_DIRECTORY" value="E:\Unreal Engine 5\UE_5.1" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;D:\Mohamed Work\Test Projects\TetrisGame\Tetris.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -59,8 +57,8 @@
       <configuration_3>
         <option name="CONFIGURATION" value="DebugGame" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="C:\Work Projects\TetrisGame\Binaries\Win64\Tetris-Win64-DebugGame.exe" />
-        <option name="WORKING_DIRECTORY" value="C:\Program Files (x86)\UE_5.1" />
+        <option name="EXECUTABLE_PATH" value="D:\Mohamed Work\Test Projects\TetrisGame\Binaries\Win64\Tetris-Win64-DebugGame.exe" />
+        <option name="WORKING_DIRECTORY" value="E:\Unreal Engine 5\UE_5.1" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -69,9 +67,9 @@
       <configuration_4>
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="C:\Program Files (x86)\UE_5.1\Engine\Binaries\Win64\UnrealEditor.exe" />
-        <option name="WORKING_DIRECTORY" value="C:\Program Files (x86)\UE_5.1" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Work Projects\TetrisGame\Tetris.uproject&quot;" />
+        <option name="EXECUTABLE_PATH" value="E:\Unreal Engine 5\UE_5.1\Engine\Binaries\Win64\UnrealEditor.exe" />
+        <option name="WORKING_DIRECTORY" value="E:\Unreal Engine 5\UE_5.1" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;D:\Mohamed Work\Test Projects\TetrisGame\Tetris.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -79,8 +77,8 @@
       <configuration_5>
         <option name="CONFIGURATION" value="Development" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="C:\Work Projects\TetrisGame\Binaries\Win64\Tetris.exe" />
-        <option name="WORKING_DIRECTORY" value="C:\Program Files (x86)\UE_5.1" />
+        <option name="EXECUTABLE_PATH" value="D:\Mohamed Work\Test Projects\TetrisGame\Binaries\Win64\Tetris.exe" />
+        <option name="WORKING_DIRECTORY" value="E:\Unreal Engine 5\UE_5.1" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -89,8 +87,8 @@
       <configuration_6>
         <option name="CONFIGURATION" value="Shipping" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="C:\Work Projects\TetrisGame\Binaries\Win64\Tetris-Win64-Shipping.exe" />
-        <option name="WORKING_DIRECTORY" value="C:\Program Files (x86)\UE_5.1" />
+        <option name="EXECUTABLE_PATH" value="D:\Mohamed Work\Test Projects\TetrisGame\Binaries\Win64\Tetris-Win64-Shipping.exe" />
+        <option name="WORKING_DIRECTORY" value="E:\Unreal Engine 5\UE_5.1" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -116,6 +114,7 @@
       <workItem from="1677512653172" duration="10692000" />
       <workItem from="1677609962883" duration="5680000" />
       <workItem from="1677624827048" duration="318000" />
+      <workItem from="1677660816521" duration="4130000" />
     </task>
     <servers />
   </component>

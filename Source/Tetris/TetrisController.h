@@ -47,6 +47,7 @@ private:
 	void SpawnNewPiece();
 	void InitializePiece(ATetrisPiece& piece);
 
+	bool ATetrisController::CanMove(CompoundPiece compundPiece, FIntVector2 newPosition);
 	int GetFirstCollisionY(CompoundPiece compoundPiece);
 	void ReorganizePieces();
 	TArray<ATetrisPiece*>* SplitPiece(ATetrisPiece* piece);

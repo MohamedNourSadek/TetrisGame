@@ -185,11 +185,11 @@ void ATetrisController::ReorganizePieces()
 	{
 		int totalSum = 0;
 		
-		for(ATetrisPiece* piece : spawnedPieces)
+		for(SubPiece* subPiece : spawnedPieces)
 		{
-			if(piece != nullptr)
+			if(subPiece != nullptr)
 			{
-				if(piece->y == i)
+				if(subPiece->absPosition.Y == i)
 					totalSum += 1;
 			}
 		}
@@ -201,25 +201,57 @@ void ATetrisController::ReorganizePieces()
 	//destroying and moving pieces
 	for(int completeRow : compelteRows)
 	{
-		TArray<ATetrisPiece*> piecesToRemove;
+		TArray<SubPiece*> piecesToRemove;
 		
-		for(ATetrisPiece* piece : spawnedPieces)
+		for(SubPiece* subPiece : spawnedPieces)
 		{
-			if(piece->y == completeRow)
-				piecesToRemove.Add(piece);
-
+			if(subPiece->absPosition.Y == completeRow)
+				piecesToRemove.Add(subPiece);
 		}
 
-		for(ATetrisPiece* piece : piecesToRemove)
+		for(SubPiece* subPiece : spawnedPieces)
 		{
-			spawnedPieces.Remove(piece);
-			piece->Destroy();
+			spawnedPieces.Remove(subPiece);
+			subPiece->myPiece->Destroy();
 		}
 
-		for(ATetrisPiece* piece : spawnedPieces)
+		for(SubPiece* subPiece : spawnedPieces)
 		{
-			if(piece->y > completeRow)
-				MovePiece(piece, piece->x, piece->y - 1);
+			if(subPiece->absPosition.Y > completeRow)
+				subPiece->Move(FIntVector2(subPiece->absPosition.X, subPiece->absPosition.Y - 1));
+		}
+	}
+}
+bool ATetrisController::CanMove(CompoundPiece compundPiece, FIntVector2 newPosition)
+{
+	if(movingAPiece != true)
+	{
+		bool reachedLeft = false;
+		bool reachedRight = false;
+		bool newPosOccupied = false;
+
+		TArray<FIntVector2>* occupiedPos = FindOccupied();
+
+		for(SubPiece &subPiece: compundPiece.subPieces)
+		{
+			FIntVector2 newSubPiecePosition = FIntVector2(newPosition.X + subPiece.relativePosition.X,
+													newPosition.Y + subPiece.relativePosition.Y);
+
+			if(newSubPiecePosition.X > 10)
+			{
+				reachedLeft = true;
+			}
+			else if(newSubPiecePosition.X < 1)
+			{
+				reachedRight = true;
+			}
+
+			for (SubPiece &subPiece : compundPiece.subPieces)
+			{
+				
+			}
+
+			
 		}
 		
 	}
@@ -240,7 +272,6 @@ void ATetrisController::MovePiece(ATetrisPiece* piece,int newX,int newY)
 				reachedLeft = true;
 				break;
 			}
-		
 		}
 		bool reachedRight = (newX < 1);
 		bool newPosOccupied = false;
