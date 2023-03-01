@@ -25,22 +25,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "XThreadsFramesViewSplitterKey": "0.500994",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.500994&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "C:\\Users\\msi\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache",
-      "C:\\Users\\msi\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache",
-      "C:\\Users\\msi\\AppData\\Local\\Symbols\\src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\msi\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\msi\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\msi\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Tetris" type="Uproject" factoryName="rider.uproject">
       <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Tetris.uproject" />
@@ -115,6 +115,8 @@
       <workItem from="1677609962883" duration="5680000" />
       <workItem from="1677624827048" duration="318000" />
       <workItem from="1677660816521" duration="4130000" />
+      <workItem from="1677670192040" duration="59000" />
+      <workItem from="1677674462629" duration="4366000" />
     </task>
     <servers />
   </component>

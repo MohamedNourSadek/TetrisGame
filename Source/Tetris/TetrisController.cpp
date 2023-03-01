@@ -47,7 +47,7 @@ void ATetrisController::Tick(float DeltaTime)
 		{
 			lastSecondTicked = timeDescrete;
 			
-			int collisionLimit = LastCollision(&currentPiece);
+			int collisionLimit = GetFirstCollisionY(currentPiece);
 			
 			UE_LOG(LogTemp, Display, TEXT("%d"), collisionLimit);
 			
@@ -246,206 +246,48 @@ bool ATetrisController::CanMove(CompoundPiece compundPiece, FIntVector2 newPosit
 				reachedRight = true;
 			}
 
-			for (SubPiece &subPiece : compundPiece.subPieces)
+			for (FIntVector2 occupied : occupiedPos)
 			{
-				
-			}
-
-			
-		}
-		
-	}
-}
-void ATetrisController::MovePiece(ATetrisPiece* piece,int newX,int newY)
-{
-	if(movingAPiece != true)
-	{
-		movingAPiece = true;
-
-		bool reachedLeft = false;
-		for(FIntVector2 bodyPiece: piece->geometry)
-		{
-			int newPos = newX + bodyPiece.X;
-
-			if(newPos > 10)
-			{
-				reachedLeft = true;
-				break;
-			}
-		}
-		bool reachedRight = (newX < 1);
-		bool newPosOccupied = false;
-
-		TArray<FIntVector2>* occupiedPos = FindOccupied();
-		TArray<FIntVector2> conflicted;
-		
-		for(FIntVector2 bodyPiece: piece->geometry)
-			for(FIntVector2 v : *occupiedPos)
-				if(v.X == newX + bodyPiece.X && v.Y == newY + bodyPiece.Y)
+				if((subPiece.absPosition.X == occupied.X) && (subPiece.absPosition.Y == occupied.Y))
 				{
-					conflicted.Add(v);					
-					newPosOccupied = true;
-				}
-
-		delete occupiedPos;
-	
-		if (!reachedLeft && !reachedRight && !newPosOccupied)
-		{
-			piece->MovePiece(newX,newY);
-		}
-
-		movingAPiece = false;
-	}
-}
-void ATetrisController::MovePiece(TArray<ATetrisPiece*> piece,int newX,int newY)
-{
-	if(movingAPiece != true)
-	{
-		movingAPiece = true;
-
-		bool reachedLeft = false;
-		bool reachedRight = false;
-		
-		TArray<FIntVector2> delta;
-
-		for(int i = 0; i < piece.Num(); i++)
-		{
-			int deltaX = piece[i]->x - piece[0]->x;
-			int deltaY = piece[i]->y - piece[0]->y;
-
-			delta.Add(FIntVector2(deltaX,deltaY));
-			
-			int newPos = newX + deltaX;
-			
-			if(newPos > 10)
-				reachedLeft = true;
-		}
-		for(int i = 0; i < piece.Num(); i++)
-		{
-  			int newPos = newX + delta[i].X;
-
-			if(newPos < 1)
-				reachedRight = true;
-		}
-		
-		bool newPosOccupied = false;
-
-		TArray<FIntVector2>* occupiedPos = FindOccupied();
-
-		TArray<FIntVector2> conflicted;
-		
-		for(int i = 0; i < piece.Num(); i++)
-		{
-			for(FIntVector2 v : *occupiedPos)
-			{
-				if(v.X == newX + delta[i].X && v.Y == newY + delta[i].Y)
-				{
-					conflicted.Add(v);					
 					newPosOccupied = true;
 				}
 			}
 		}
 
-		delete occupiedPos;
-	
-		if (!reachedLeft && !reachedRight && !newPosOccupied)
+		if(!reachedLeft && !reachedRight && !newPosOccupied)
 		{
-			for(int i = 0; i < piece.Num(); i++)
-			{
-				piece[i]->MovePiece(newX + delta[i].X,newY + delta[i].Y);
-			}
+			return true;
 		}
-
-		movingAPiece = false;
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
 	}
 }
-void ATetrisController::RotatePiece(TArray<ATetrisPiece*>& piece)
+void ATetrisController::RotatePiece()
 {
-	UE_LOG(LogTemp, Display, TEXT("Rotating"));
-
-	FIntVector2 origin (20,20);
-
-	for(ATetrisPiece* subPiece : piece)
-		if(subPiece->x < origin.X)
-			origin.X = subPiece->x;
-
-	for(ATetrisPiece* subPiece : piece)
-		if(subPiece->y < origin.Y)
-			origin.Y = subPiece->y;
-
-	TArray<FIntVector2> newPositions;
+	TArray<FIntVector2> newAbsPositions;
+	TArray<FIntVector2> newRelativePositions;
 	
-	for(ATetrisPiece* subPiece : piece)
+	for(SubPiece& subPiece : currentPiece)
 	{
-		FIntVector2 relativePos = FIntVector2(subPiece->x - origin.X, subPiece->y - origin.Y);
-		FIntVector2 newRelativePos = rotationTransform.FindRef(relativePos);
-		FIntVector2 newPosition = FIntVector2(origin.X + newRelativePos.X, origin.Y + newRelativePos.Y);
-
-		newPositions.Add(newPosition);
-	}
-
-	for(FIntVector2 v : newPositions)
-	{
-		if(v.X > 10 || v.X < 1)
-		{
-			return;
-		}
-	}
-
-	for(int i = 0; i < newPositions.Num(); i++)
-		MovePiece(piece[i], newPositions[i].X, newPositions[i].Y);
-}
-TArray<ATetrisPiece*>* ATetrisController::SplitPiece(ATetrisPiece* piece)
-{
-	TArray<ATetrisPiece*>* splitPiece = new TArray<ATetrisPiece*>();
-	
-	spawnedPieces.Remove(piece);
-	
-	TArray<UActorComponent*> children;
-	piece->GetComponents(children);
-
-	UMaterialInterface* material = nullptr;
-	
-	for(auto child : children)
-	{
-		if(child->GetName() == "Cube")
-		{
-			UStaticMeshComponent* body = piece->FindComponentByClass<UStaticMeshComponent>();
-			material =  body->GetMaterial(0);
-		}
-	}
-	
-	for(FIntVector2 bodyPiece: piece->geometry)
-	{
-		ATetrisPiece* newPiece = Cast<ATetrisPiece>(GetWorld()->SpawnActor(unitPiece, &spawnPoint->GetTransform()));
-
-		MovePiece(
-			newPiece,
-			piece->x + bodyPiece.X,
-			piece->y + bodyPiece.Y);
-
-		splitPiece->Add(newPiece);
+		FIntVector2 newRelativePos = rotationTransform.FindRef(subPiece.relativePosition);
+		FIntVector2 newAbsPosition = FIntVector2(subPiece.absPosition.X + newRelativePos.X, subPiece.absPosition.X + newRelativePos.Y);
 		
-		spawnedPieces.Add(newPiece);
-
-		TArray<UActorComponent*> newChildren;
-		newPiece->GetComponents(newChildren);
-
-		for(auto child : newChildren)
-		{
-			if(child->GetName() == "Cube")
-			{
-				UStaticMeshComponent* body = newPiece->FindComponentByClass<UStaticMeshComponent>();
-
-				if(material != nullptr)
-					body->SetMaterial(0,material);
-			}
-		}
-
+		newRelativePositions.Add(newRelativePos);
+		newAbsPositions.Add(newAbsPosition);
 	}
 
-	piece->Destroy();
-	return splitPiece;
+	for(int i = 0; i < newAbsPositions.Num(); i++)
+	{
+		currentPiece.subPieces[i].relativePosition = newRelativePositions[i];
+		currentPiece.subPieces[i].Move(newAbsPositions[i]);
+	}
 }
 #pragma endregion
 
@@ -454,48 +296,34 @@ void ATetrisController::JumpRecieved()
 {
 	if(gameIsOn)
 	{
-		int collisionLimit = LastCollision(&currentPiece);
-		
-		UE_LOG(LogTemp, Display, TEXT("%d"), collisionLimit);
-
-		FIntVector2 origin (20,20);
-
-		for(ATetrisPiece* subPiece : currentPiece)
-			if(subPiece->x < origin.X)
-				origin.X = subPiece->x;
-
-		for(ATetrisPiece* subPiece : currentPiece)
-			if(subPiece->y < origin.Y)
-				origin.Y = subPiece->y;
-
-		TArray<int> deltaYs;
-		
-		for(ATetrisPiece* piece : currentPiece)
-		{
-			int deltaY = deltaY = piece->y - origin.Y;
-			deltaYs.Add(deltaY);
-		}
-
-		for(int i = 0; i < deltaYs.Num(); i++)
-			MovePiece(currentPiece[i], currentPiece[i]->x, collisionLimit + deltaYs[i]);
-
-
+		int collisionLimit = GetFirstCollisionY(currentPiece);
+		currentPiece.Move(FIntVector2(currentPiece.position.X, collisionLimit));
 		SpawnNewPiece();
 	}
 }
 void ATetrisController::RotateRecieved()
 {
 	if(gameIsOn)
-		RotatePiece(currentPiece);
+		RotatePiece();
 }
 void ATetrisController::LeftRecieved()
 {
 	if(gameIsOn)
-		MovePiece(currentPiece, currentPiece[0]->x + 1, currentPiece[0]->y);
+	{
+		FIntVector2 newPosition = FIntVector2(currentPiece.position.X - 1, currentPiece.position.Y);
+
+		if(CanMove(currentPiece, newPosition))
+			currentPiece.Move(newPosition);
+	}
 }
 void ATetrisController::RightRecieved()
 {
 	if(gameIsOn)
-		MovePiece(currentPiece, currentPiece[0]->x - 1, currentPiece[0]->y);
+	{
+		FIntVector2 newPosition = FIntVector2(currentPiece.position.X + 1, currentPiece.position.Y);
+
+		if(CanMove(currentPiece, newPosition))
+			currentPiece.Move(newPosition);
+	}
 }
 #pragma endregion

@@ -56,7 +56,7 @@ private:
 
 	void MovePiece(ATetrisPiece* piece,int newX,int newY);
 	void MovePiece(TArray<ATetrisPiece*> piece,int newX,int newY);
-	void RotatePiece(TArray<ATetrisPiece*>& piece);
+	void RotatePiece();
 
 	void RightRecieved();
 	void LeftRecieved();
