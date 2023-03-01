@@ -47,7 +47,7 @@ private:
 	void SpawnNewPiece();
 	void InitializePiece(ATetrisPiece& piece);
 
-	int LastCollision(TArray<ATetrisPiece*>* piece);
+	int GetFirstCollisionY(CompoundPiece compoundPiece);
 	void ReorganizePieces();
 	TArray<ATetrisPiece*>* SplitPiece(ATetrisPiece* piece);
 	TArray<FIntVector2>* FindOccupied();

@@ -8,8 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Tetris.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Tetris.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisPiece.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisPiece.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisPiece.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisPiece.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +114,8 @@
       <workItem from="1677442270333" duration="453000" />
       <workItem from="1677442809546" duration="2104000" />
       <workItem from="1677512653172" duration="10692000" />
-      <workItem from="1677609962883" duration="5515000" />
+      <workItem from="1677609962883" duration="5680000" />
+      <workItem from="1677624827048" duration="318000" />
     </task>
     <servers />
   </component>

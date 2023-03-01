@@ -86,9 +86,11 @@ void ATetrisController::SpawnNewPiece()
 
 	TArray<FIntVector2> newPiecePrototype = GetRandomProtoype();
 	
-	CompoundPiece newPiece;
-	newPiece.position = 
-	for(FIntVector2 newSubPiecePrototype : newPiece)
+	CompoundPiece compoundPiece;
+
+	compoundPiece.position = FIntVector2(((spawnPoint->GetActorLocation().X / 100),spawnPoint->GetActorLocation().Y / 100));
+	
+	for(FIntVector2 newSubPiecePrototype : newPiecePrototype)
 	{
 		ATetrisPiece* piece = Cast<ATetrisPiece>(GetWorld()->SpawnActor(unitPiece, &spawnPoint->GetTransform()));
 
@@ -100,10 +102,15 @@ void ATetrisController::SpawnNewPiece()
 
 		piece->SetActorLocation(piece->GetActorLocation() + deltaNewLocation);
 
-		piece->x = (spawnPoint->GetActorLocation().X / 100) + newSubPiecePrototype.X;
-		piece->y = (spawnPoint->GetActorLocation().Y / 100) + newSubPiecePrototype.Y;
+		SubPiece subPiece;
 
-		spawnedPieces.Add(piece);
+		subPiece.relativePosition = newSubPiecePrototype;
+		subPiece.absPosition = FIntVector2(subPiece.relativePosition.X + compoundPiece.position.X,
+											subPiece.relativePosition.Y + compoundPiece.position.Y);
+		subPiece.myPiece = piece;
+
+		compoundPiece.subPieces.Add(subPiece);
+		spawnedPieces.Add(&subPiece);
 	}
 }
 TArray<FIntVector2> ATetrisController::GetRandomProtoype()
@@ -113,7 +120,7 @@ TArray<FIntVector2> ATetrisController::GetRandomProtoype()
 	return newPiecePrototype;
 }
 
-int ATetrisController::LastCollision(TArray<ATetrisPiece*>* piece)
+int ATetrisController::GetFirstCollisionY(CompoundPiece compoundPiece)
 {
 	TArray<FIntVector2>* occupied = FindOccupied();
 	
@@ -124,25 +131,22 @@ int ATetrisController::LastCollision(TArray<ATetrisPiece*>* piece)
 	}
 
 	int startY = 20;
-	for(ATetrisPiece* subPiece: *piece)
+	for(SubPiece &subPiece : compoundPiece.subPieces)
 	{
-		if(subPiece->y < startY)
-			startY = subPiece->y;
+		if(subPiece.absPosition.Y < startY)
+			startY = subPiece.absPosition.Y;
 	}
 
 	for(int y = startY; y >= 1; y--)
 	{
-		for(ATetrisPiece* subPiece : *piece)
+		for(SubPiece &subPiece : compoundPiece.subPieces)
 		{
-			int posX = subPiece->x;
-			int posY = y + (subPiece->y - (*piece)[0]->y);
-
 			for (FIntVector2 point : *occupied)
 			{
-				if(point.X == posX && point.Y == posY)
+				if(subPiece.absPosition.X == point.X && subPiece.absPosition.Y == point.Y)
 				{
 					delete occupied;
-					return posY + 1;
+					return subPiece.absPosition.Y + 1;
 				}
 			}
 		}
@@ -155,22 +159,19 @@ TArray<FIntVector2>* ATetrisController::FindOccupied()
 {
 	TArray<FIntVector2>* occupied = new TArray<FIntVector2>();
 	
-	for (ATetrisPiece* piece : spawnedPieces)
+	for (SubPiece* subPiece : spawnedPieces)
 	{
 		bool oneOfMyPieces = false;
 
-		for(ATetrisPiece* aPiece : currentPiece)
+		for(SubPiece &mySubPiece : currentPiece.subPieces)
 		{
-			if (piece == aPiece)
+			if (mySubPiece.absPosition == subPiece->absPosition)
 				oneOfMyPieces = true;
 		}
 		
 		if (!oneOfMyPieces)
 		{
-			for(FIntVector2 bodyPiece : piece->geometry)
-			{
-				occupied->Add(FIntVector2(piece->x + bodyPiece.X, piece->y + bodyPiece.Y));
-			}
+			occupied->Add(subPiece->absPosition);
 		}
 	}
 
