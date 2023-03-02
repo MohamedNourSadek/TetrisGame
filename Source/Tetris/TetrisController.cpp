@@ -40,8 +40,6 @@ void ATetrisController::Tick(float DeltaTime)
 			
 			int collisionLimit = GetFirstCollisionY(currentPiece);
 			
-			UE_LOG(LogTemp, Display, TEXT("%d"), collisionLimit);
-			
 			if (collisionLimit > 20)
 			{
 				UE_LOG(LogTemp, Display, TEXT("Game is Over"))
@@ -218,6 +216,15 @@ void ATetrisController::ReorganizePieces()
 				piecesToRemove.Add(subPiece);
 		}
 	}
+
+	if(compelteRows->Num() == 1)
+		totalScore += 1;
+	else if(compelteRows->Num() == 2)
+		totalScore += 4;
+	else if(compelteRows->Num() >= 3)
+		totalScore += 8;
+
+	UE_LOG(LogTemp, Display, TEXT("Your Total Score: %d"), totalScore);
 	
 	for(SubPiece* subPiece : piecesToRemove)
 	{

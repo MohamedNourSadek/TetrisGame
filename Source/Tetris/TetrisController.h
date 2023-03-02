@@ -37,6 +37,7 @@ private:
 	bool movingAPiece = false;
 	int lastSecondTicked = 0;
 	float timeSinceStartUp = 0;
+	int totalScore = 0;
 
 #pragma endregion
 
