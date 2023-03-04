@@ -7,6 +7,7 @@
 #include "TetrisPiece.h"
 #include "CompoundPiece.h"
 #include "SubPiece.h"
+#include "TetrisPlayerController.h"
 #include "TetrisController.generated.h"
 
 UCLASS()
@@ -30,7 +31,7 @@ private:
 	UPROPERTY(EditAnywhere) AActor* spawnPoint;
 	UPROPERTY(EditAnywhere) TSubclassOf<AActor> unitPiece;
 
-
+	ATetrisPlayerController* controller;
 	TArray<TArray<FIntVector2>> prototypePieces;
 	CompoundPiece* currentPiece;
 	TArray<SubPiece*> spawnedPieces;

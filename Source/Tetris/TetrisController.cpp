@@ -2,6 +2,10 @@
 
 #include "TetrisController.h"
 
+#include "UnrealWidgetFwd.h"
+#include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
+
 
 #pragma region Unreal Functions
 ATetrisController::ATetrisController()
@@ -20,6 +24,9 @@ void ATetrisController::InitializeData()
 void ATetrisController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	controller = Cast<ATetrisPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
 	InitializeData();
 	SpawnNewPiece();
 	gameIsOn =true;
@@ -224,6 +231,8 @@ void ATetrisController::ReorganizePieces()
 	else if(compelteRows->Num() >= 3)
 		totalScore += 8;
 
+	controller->ChangeScore(totalScore);
+	
 	UE_LOG(LogTemp, Display, TEXT("Your Total Score: %d"), totalScore);
 	
 	for(SubPiece* subPiece : piecesToRemove)

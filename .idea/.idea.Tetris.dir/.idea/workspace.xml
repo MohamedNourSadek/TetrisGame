@@ -6,6 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="10737dd8-ffec-412a-8e6c-7edddec0f794" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Tetris.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Tetris.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEditor.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEditor.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_Mode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_Mode.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/GameMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/GameMap.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Maps/GameMap/C/0Q/6VER2EAGL7UJP2WJ86LJWI.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Tetris/Tetris.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/Tetris.Build.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisController.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,6 +128,7 @@
       <workItem from="1677744137665" duration="4055000" />
       <workItem from="1677866006514" duration="585000" />
       <workItem from="1677930465790" duration="596000" />
+      <workItem from="1677947599874" duration="4822000" />
     </task>
     <servers />
   </component>
