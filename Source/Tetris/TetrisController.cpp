@@ -31,7 +31,7 @@ void ATetrisController::Tick(float DeltaTime)
 	if(gameIsOn)
 	{
 		timeSinceStartUp += DeltaTime;
-	
+		tickEvery = FMath::Clamp(tickEvery - acceleration*DeltaTime, .001, 1000);
 		int timeDescrete = (int)(timeSinceStartUp/ tickEvery);
 	
 		if ((timeDescrete != lastSecondTicked) && (!movingAPiece))

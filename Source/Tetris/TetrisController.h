@@ -26,6 +26,7 @@ protected:
 #pragma region Private Variables
 private:
 	UPROPERTY(EditAnywhere) float tickEvery = 1;
+	UPROPERTY(EditAnywhere) float acceleration = 1;
 	UPROPERTY(EditAnywhere) AActor* spawnPoint;
 	UPROPERTY(EditAnywhere) TSubclassOf<AActor> unitPiece;
 

@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="10737dd8-ffec-412a-8e6c-7edddec0f794" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Tetris.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Tetris.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultInput.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultInput.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Maps/GameMap/C/0Q/6VER2EAGL7UJP2WJ86LJWI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Maps/GameMap/C/0Q/6VER2EAGL7UJP2WJ86LJWI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisController.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,9 +34,9 @@
   },
   &quot;keyToStringList&quot;: {
     &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\msi\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\msi\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\msi\\AppData\\Local\\Symbols\\src&quot;
+      &quot;C:\\Users\\moham\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\moham\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\moham\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
 }</component>
@@ -50,9 +46,9 @@
       <configuration_2>
         <option name="CONFIGURATION" value="DebugGame Editor" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="E:\Unreal Engine 5\UE_5.1\Engine\Binaries\Win64\UnrealEditor-Win64-DebugGame.exe" />
-        <option name="WORKING_DIRECTORY" value="E:\Unreal Engine 5\UE_5.1" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;D:\Mohamed Work\Test Projects\TetrisGame\Tetris.uproject&quot;" />
+        <option name="EXECUTABLE_PATH" value="C:\Program Files (x86)\UE_5.1\Engine\Binaries\Win64\UnrealEditor-Win64-DebugGame.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files (x86)\UE_5.1" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Work Projects\TetrisGame\Tetris.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -60,8 +56,8 @@
       <configuration_3>
         <option name="CONFIGURATION" value="DebugGame" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="D:\Mohamed Work\Test Projects\TetrisGame\Binaries\Win64\Tetris-Win64-DebugGame.exe" />
-        <option name="WORKING_DIRECTORY" value="E:\Unreal Engine 5\UE_5.1" />
+        <option name="EXECUTABLE_PATH" value="C:\Work Projects\TetrisGame\Binaries\Win64\Tetris-Win64-DebugGame.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files (x86)\UE_5.1" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -70,9 +66,9 @@
       <configuration_4>
         <option name="CONFIGURATION" value="Development Editor" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="E:\Unreal Engine 5\UE_5.1\Engine\Binaries\Win64\UnrealEditor.exe" />
-        <option name="WORKING_DIRECTORY" value="E:\Unreal Engine 5\UE_5.1" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;D:\Mohamed Work\Test Projects\TetrisGame\Tetris.uproject&quot;" />
+        <option name="EXECUTABLE_PATH" value="C:\Program Files (x86)\UE_5.1\Engine\Binaries\Win64\UnrealEditor.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files (x86)\UE_5.1" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Work Projects\TetrisGame\Tetris.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
         <option name="USE_EXTERNAL_CONSOLE" value="0" />
@@ -80,8 +76,8 @@
       <configuration_5>
         <option name="CONFIGURATION" value="Development" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="D:\Mohamed Work\Test Projects\TetrisGame\Binaries\Win64\Tetris.exe" />
-        <option name="WORKING_DIRECTORY" value="E:\Unreal Engine 5\UE_5.1" />
+        <option name="EXECUTABLE_PATH" value="C:\Work Projects\TetrisGame\Binaries\Win64\Tetris.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files (x86)\UE_5.1" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -90,8 +86,8 @@
       <configuration_6>
         <option name="CONFIGURATION" value="Shipping" />
         <option name="PLATFORM" value="Win64" />
-        <option name="EXECUTABLE_PATH" value="D:\Mohamed Work\Test Projects\TetrisGame\Binaries\Win64\Tetris-Win64-Shipping.exe" />
-        <option name="WORKING_DIRECTORY" value="E:\Unreal Engine 5\UE_5.1" />
+        <option name="EXECUTABLE_PATH" value="C:\Work Projects\TetrisGame\Binaries\Win64\Tetris-Win64-Shipping.exe" />
+        <option name="WORKING_DIRECTORY" value="C:\Program Files (x86)\UE_5.1" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -123,6 +119,8 @@
       <workItem from="1677685614689" duration="17079000" />
       <workItem from="1677740488946" duration="1929000" />
       <workItem from="1677744137665" duration="4055000" />
+      <workItem from="1677866006514" duration="585000" />
+      <workItem from="1677930465790" duration="596000" />
     </task>
     <servers />
   </component>
