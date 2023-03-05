@@ -16,8 +16,8 @@ class TETRIS_API ATetrisPlayerController : public APlayerController
 
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere) TSubclassOf<class UUserWidget> BP_scoreUI;
-	UUserWidget* scoreUI;
+	UPROPERTY(EditAnywhere) TSubclassOf<class UGameUI> BP_scoreUI;
+	UGameUI* scoreUI;
 
 public:
 	void ChangeScore(int newScore);

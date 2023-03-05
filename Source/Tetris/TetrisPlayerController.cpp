@@ -2,23 +2,20 @@
 
 
 #include "TetrisPlayerController.h"
+#include "GameUI.h"
 #include "Blueprint/UserWidget.h"
 
 void ATetrisPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	scoreUI = CreateWidget<UUserWidget>(this, BP_scoreUI);
+	scoreUI = CreateWidget<UGameUI>(this, BP_scoreUI);
 
 	if(scoreUI)
 		scoreUI->AddToViewport();
 }
-
 void ATetrisPlayerController::ChangeScore(int newScore)
 {
-	if(newScore % 2 == 0)
-		scoreUI->SetVisibility( ESlateVisibility::Hidden);
-	else
-		scoreUI->SetVisibility(ESlateVisibility::Visible);
+	scoreUI->DisplayText =  FString::FromInt(newScore);
 }
 
