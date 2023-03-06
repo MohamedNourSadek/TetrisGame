@@ -16,6 +16,19 @@ void ATetrisPlayerController::BeginPlay()
 }
 void ATetrisPlayerController::ChangeScore(int newScore)
 {
-	scoreUI->DisplayText =  FString::FromInt(newScore);
+	scoreUI->displayText =  FString::FromInt(newScore);
 }
+
+void ATetrisPlayerController::ChangeUiState(int isGameOn)
+{
+	scoreUI->isGameOn = isGameOn;
+
+	if(isGameOn == 0)
+	{
+		bShowMouseCursor = true;
+		bEnableClickEvents = true;
+		bEnableMouseOverEvents = true;
+	}
+}
+
 

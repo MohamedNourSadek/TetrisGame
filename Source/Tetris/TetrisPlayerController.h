@@ -21,5 +21,5 @@ class TETRIS_API ATetrisPlayerController : public APlayerController
 
 public:
 	void ChangeScore(int newScore);
-
+	void ChangeUiState(int isGameOn);
 };

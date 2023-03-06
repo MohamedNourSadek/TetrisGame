@@ -16,8 +16,15 @@ class TETRIS_API UGameUI : public UUserWidget
 
 public:
 
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void OnRestartClick();
+
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void OnQuitClick();
+	
 	/** FText value displayed by this widget */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Text")
-	FString DisplayText;
-
+	FString displayText;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Text")
+	int isGameOn;
 };

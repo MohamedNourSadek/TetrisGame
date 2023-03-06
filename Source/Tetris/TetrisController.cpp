@@ -2,7 +2,6 @@
 
 #include "TetrisController.h"
 
-#include "UnrealWidgetFwd.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -30,6 +29,7 @@ void ATetrisController::BeginPlay()
 	InitializeData();
 	SpawnNewPiece();
 	gameIsOn =true;
+	controller->ChangeUiState(1);
 }
 void ATetrisController::Tick(float DeltaTime)
 {
@@ -47,10 +47,10 @@ void ATetrisController::Tick(float DeltaTime)
 			
 			int collisionLimit = GetFirstCollisionY(currentPiece);
 			
-			if (collisionLimit > 20)
+			if (collisionLimit > 20 && gameIsOn)
 			{
-				UE_LOG(LogTemp, Display, TEXT("Game is Over"))
 				gameIsOn = false;
+				controller->ChangeUiState(0);
 			}
 			else if (currentPiece->position.Y > collisionLimit)
 			{
@@ -84,7 +84,6 @@ FIntVector2 ATetrisController::TransformSpace(FIntVector2 input)
 void ATetrisController::SpawnNewPiece()
 {
 	ReorganizePieces();
-
 	TArray<FIntVector2> newPiecePrototype = GetRandomProtoype();
 	
 	CompoundPiece* compoundPiece = new CompoundPiece();
@@ -214,7 +213,6 @@ void ATetrisController::ReorganizePieces()
 
 	//destroying and moving pieces
 	TArray<SubPiece*> piecesToRemove;
-
 	for(int completeRow : *compelteRows)
 	{
 		for(SubPiece* subPiece : spawnedPieces)
@@ -233,17 +231,13 @@ void ATetrisController::ReorganizePieces()
 
 	controller->ChangeScore(totalScore);
 	
-	UE_LOG(LogTemp, Display, TEXT("Your Total Score: %d"), totalScore);
-	
 	for(SubPiece* subPiece : piecesToRemove)
 	{
 		spawnedPieces.Remove(subPiece);
 		subPiece->myPiece->Destroy();
 		delete subPiece;
 	}
-
 	TArray<int> reductionIndices;
-
 	for(int i = 1; i <= 20; i++)
 	{
 		int numOfCompleteRowsUnderNeathIt = 0;
@@ -261,9 +255,15 @@ void ATetrisController::ReorganizePieces()
 
 	for(SubPiece* subPiece : spawnedPieces)
 	{
-		subPiece->Move(
-			FIntVector2(subPiece->absPosition.X,
-				subPiece->absPosition.Y - reductionIndices[subPiece->absPosition.Y]));
+		if(subPiece->absPosition.Y <= 20)
+		{
+			FIntVector2 newPosition =
+ 				FIntVector2(
+					subPiece->absPosition.X,
+					subPiece->absPosition.Y - reductionIndices[subPiece->absPosition.Y - 1]);
+		
+			subPiece->Move(newPosition);	
+		}
 	}
 	
 	delete compelteRows;
