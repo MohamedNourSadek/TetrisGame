@@ -14,11 +14,40 @@ ATetrisController::ATetrisController()
 void ATetrisController::InitializeData()
 {
 	//Adding pieces
-	prototypePieces.Add(TArray<FIntVector2> {FIntVector2(0,0)}); 
-	prototypePieces.Add(TArray<FIntVector2> {FIntVector2(0,0), FIntVector2(1,0),FIntVector2(-1,0)});
-	prototypePieces.Add(TArray<FIntVector2> {FIntVector2(0,0), FIntVector2(0,-1),FIntVector2(0,1)});
-	prototypePieces.Add(TArray<FIntVector2> {FIntVector2(0,0), FIntVector2(1,0),FIntVector2(-1,0) , FIntVector2(0,1)});
-	prototypePieces.Add(TArray<FIntVector2> {FIntVector2(0,0), FIntVector2(1,0),FIntVector2(-1,0) , FIntVector2(-1,1)});
+	//one sqaure
+	PiecePrototype newPiece;
+	newPiece.material = red;
+	newPiece.subPieces.Add(FIntVector2(0,0));
+
+	//one horizontal Line
+	PiecePrototype newPiece2;
+	newPiece2.material = green;
+	newPiece2.subPieces.Add(FIntVector2(0,0));
+	newPiece2.subPieces.Add(FIntVector2(1,0));
+	newPiece2.subPieces.Add(FIntVector2(-1,0));
+
+	   //
+	//////
+	PiecePrototype newPiece3;
+	newPiece3.material = blue;
+	newPiece3.subPieces.Add(FIntVector2(0,0));
+	newPiece3.subPieces.Add(FIntVector2(1,0));
+	newPiece3.subPieces.Add(FIntVector2(-1,0));
+	newPiece3.subPieces.Add(FIntVector2(0,1));
+
+	 //
+	//////
+	PiecePrototype newPiece4;
+	newPiece4.material = orange;
+	newPiece4.subPieces.Add(FIntVector2(0,0));
+	newPiece4.subPieces.Add(FIntVector2(1,0));
+	newPiece4.subPieces.Add(FIntVector2(-1,0));
+	newPiece4.subPieces.Add(FIntVector2(-1,1));
+
+	prototypePieces.Add(newPiece);
+	prototypePieces.Add(newPiece2);
+	prototypePieces.Add(newPiece3);
+	prototypePieces.Add(newPiece4);
 }
 void ATetrisController::BeginPlay()
 {
@@ -84,17 +113,19 @@ FIntVector2 ATetrisController::TransformSpace(FIntVector2 input)
 void ATetrisController::SpawnNewPiece()
 {
 	ReorganizePieces();
-	TArray<FIntVector2> newPiecePrototype = GetRandomProtoype();
+	PiecePrototype newPiecePrototype = GetRandomProtoype();
 	
 	CompoundPiece* compoundPiece = new CompoundPiece();
 	
 	compoundPiece->position.X = (spawnPoint->GetActorLocation().X / 100);
 	compoundPiece->position.Y = (spawnPoint->GetActorLocation().Y / 100);
 	
-	for(FIntVector2 newSubPiecePrototype : newPiecePrototype)
+	for(FIntVector2 newSubPiecePrototype : newPiecePrototype.subPieces)
 	{
 		ATetrisPiece* piece = Cast<ATetrisPiece>(GetWorld()->SpawnActor(unitPiece, &spawnPoint->GetTransform()));
 
+		piece->FindComponentByClass<UStaticMeshComponent>()->SetMaterial(0,newPiecePrototype.material);
+		
 		SubPiece* subPiece = new SubPiece();
 
 		subPiece->relativePosition = newSubPiecePrototype;
@@ -115,10 +146,11 @@ void ATetrisController::SpawnNewPiece()
 
 	currentPiece = compoundPiece;
 }
-TArray<FIntVector2> ATetrisController::GetRandomProtoype()
+PiecePrototype ATetrisController::GetRandomProtoype()
 {
 	int randomPiece = FMath::RandRange(0,prototypePieces.Num() - 1);
-	TArray<FIntVector2> newPiecePrototype = prototypePieces[randomPiece];
+	PiecePrototype newPiecePrototype = prototypePieces[randomPiece];
+	
 	return newPiecePrototype;
 }
 int ATetrisController::GetFirstCollisionY(CompoundPiece* compoundPiece)

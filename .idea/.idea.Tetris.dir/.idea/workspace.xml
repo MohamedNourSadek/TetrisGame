@@ -6,15 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="10737dd8-ffec-412a-8e6c-7edddec0f794" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Tetris.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Tetris.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_Mode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_Mode.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_Score.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_Score.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Maps/GameMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/GameMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Tetris/GameUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/GameUI.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Tetris/GameUI.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/GameUI.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Materials/Red.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Materials/Red.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Maps/GameMap/F/53/M3A6JWDWAPQA9S0SYT8EFH.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Maps/GameMap/F/53/M3A6JWDWAPQA9S0SYT8EFH.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisPlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisPlayerController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisPlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisPlayerController.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisController.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,7 +138,9 @@
       <workItem from="1678039741321" duration="12000" />
       <workItem from="1678040332070" duration="1797000" />
       <workItem from="1678042166132" duration="2561000" />
-      <workItem from="1678117437978" duration="7105000" />
+      <workItem from="1678117437978" duration="7311000" />
+      <workItem from="1678202448995" duration="2233000" />
+      <workItem from="1678204975665" duration="1231000" />
     </task>
     <servers />
   </component>

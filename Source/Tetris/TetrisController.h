@@ -7,6 +7,7 @@
 #include "TetrisPiece.h"
 #include "CompoundPiece.h"
 #include "SubPiece.h"
+#include "PiecePrototype.h"
 #include "TetrisPlayerController.h"
 #include "TetrisController.generated.h"
 
@@ -30,9 +31,13 @@ private:
 	UPROPERTY(EditAnywhere) float acceleration = 1;
 	UPROPERTY(EditAnywhere) AActor* spawnPoint;
 	UPROPERTY(EditAnywhere) TSubclassOf<AActor> unitPiece;
+	UPROPERTY(EditAnywhere) UMaterialInterface* red;
+	UPROPERTY(EditAnywhere) UMaterialInterface* blue;
+	UPROPERTY(EditAnywhere) UMaterialInterface* green;
+	UPROPERTY(EditAnywhere) UMaterialInterface* orange;
 
 	ATetrisPlayerController* controller;
-	TArray<TArray<FIntVector2>> prototypePieces;
+	TArray<PiecePrototype> prototypePieces;
 	CompoundPiece* currentPiece;
 	TArray<SubPiece*> spawnedPieces;
 	bool gameIsOn = false;
@@ -55,7 +60,7 @@ private:
 	void ReorganizePieces();
 	TArray<int>* GetCompleteRows();
 	TArray<FIntVector2>* FindOccupied();
-	TArray<FIntVector2> GetRandomProtoype();
+	PiecePrototype GetRandomProtoype();
 	void RotatePiece();
 
 	void RightRecieved();
