@@ -37,7 +37,7 @@ private:
 	UPROPERTY(EditAnywhere) UMaterialInterface* orange;
 
 	ATetrisPlayerController* controller;
-	TArray<PiecePrototype> prototypePieces;
+	TArray<PiecePrototype*> prototypePieces;
 	CompoundPiece* currentPiece;
 	TArray<SubPiece*> spawnedPieces;
 	bool gameIsOn = false;
@@ -53,14 +53,14 @@ private:
 	void InitializeData();
 	void SpawnNewPiece();
 
-	FIntVector2 TransformSpace(FIntVector2 input);
+	FIntVector2 TransformSpace(FIntVector2* input);
 	bool CanMove(CompoundPiece* compPiece, FIntVector2 newPosition);
 	bool IsPositionPossible(FIntVector2 newPosition);
 	int GetFirstCollisionY(CompoundPiece* compoundPiece);
 	void ReorganizePieces();
 	TArray<int>* GetCompleteRows();
 	TArray<FIntVector2>* FindOccupied();
-	PiecePrototype GetRandomProtoype();
+	PiecePrototype* GetRandomProtoype();
 	void RotatePiece();
 
 	void RightRecieved();

@@ -6,11 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="10737dd8-ffec-412a-8e6c-7edddec0f794" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Tetris.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Tetris.dir/.idea/workspace.xml" afterDir="false" />
+<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_Score.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_Score.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Materials/Red.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Materials/Red.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Maps/GameMap/F/53/M3A6JWDWAPQA9S0SYT8EFH.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Maps/GameMap/F/53/M3A6JWDWAPQA9S0SYT8EFH.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Tetris/TetrisController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Tetris/TetrisController.h" afterDir="false" />
+=======
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,6 +132,7 @@
       <workItem from="1677660816521" duration="4130000" />
       <workItem from="1677670192040" duration="59000" />
       <workItem from="1677674462629" duration="4366000" />
+<<<<<<< Updated upstream
       <workItem from="1677685614689" duration="17079000" />
       <workItem from="1677740488946" duration="1929000" />
       <workItem from="1677744137665" duration="4055000" />
@@ -141,6 +145,10 @@
       <workItem from="1678117437978" duration="7311000" />
       <workItem from="1678202448995" duration="2233000" />
       <workItem from="1678204975665" duration="1231000" />
+=======
+      <workItem from="1677685614689" duration="18284000" />
+      <workItem from="1677865368878" duration="492000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>
