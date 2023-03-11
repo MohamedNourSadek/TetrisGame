@@ -347,45 +347,18 @@ bool ATetrisController::CanMove(CompoundPiece* compundPiece, FIntVector2 newPosi
 {
 	if(movingAPiece != true)
 	{
-		bool reachedLeft = false;
-		bool reachedRight = false;
-		bool newPosOccupied = false;
-
-		TArray<FIntVector2>* occupiedPos = FindOccupied();
+		bool canMove = true;
 
 		for(SubPiece* subPiece: compundPiece->subPieces)
 		{
 			FIntVector2 newSubPiecePosition = FIntVector2(newPosition.X + subPiece->relativePosition.X,
 														newPosition.Y + subPiece->relativePosition.Y);
-			if(newSubPiecePosition.X > 10)
-			{
-				reachedLeft = true;
-			}
-			else if(newSubPiecePosition.X < 1)
-			{
-				reachedRight = true;
-			}
 
-			for (FIntVector2 occupied : *occupiedPos)
-			{
-				if((newPosition.X + subPiece->relativePosition.X == occupied.X) &&
-				   (newPosition.Y + subPiece->relativePosition.Y == occupied.Y))
-				{
-					newPosOccupied = true;
-				}
-			}
+			if(IsPositionPossible(newSubPiecePosition) == false)
+				canMove = false;
 		}
 
-		delete occupiedPos;
-		
-		if(!reachedLeft && !reachedRight && !newPosOccupied)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return canMove;
 	}
 	else
 	{
