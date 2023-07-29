@@ -5,9 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "TetrisPiece.h"
-#include "CompoundPiece.h"
-#include "SubPiece.h"
-#include "PiecePrototype.h"
+#include "../Tetris/Data Structures/CompoundPiece.h"
+#include "../Tetris/Data Structures/SubPiece.h"
+#include "../Tetris/Data Structures/PiecePrototype.h"
 #include "TetrisPlayerController.h"
 #include "TetrisController.generated.h"
 

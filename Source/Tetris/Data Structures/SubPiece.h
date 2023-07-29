@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TetrisPiece.h"
+#include "../TetrisPiece.h"
 
 class TETRIS_API SubPiece
 {
